@@ -1,0 +1,61 @@
+题目描述：
+求两个整数的和。
+输入格式：
+一行，两个用空格隔开的整数。
+输出格式：
+两个整数的和，且对于 100% 的数据，输入的整数在[1,4×10^18]内。
+
+
+#include <stdio.h>
+int main()
+{
+ long long i=0;
+ long long j=0;
+ scanf("%lld %lld",&i,&j);
+ long long a=i+j;
+ printf("%lld",a);
+ return 0;
+}
+
+错因：忽略了存储空间大小问题，大数计算可能会导致内存溢出
+////////////////////////////////////////////////////////////////////
+#include <stdio.h>
+int main()
+{
+    printf("Hello,World!");
+    return 0;
+}
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+#include <stdio.h>
+int main()
+{
+    long i=0;
+    long j=0;
+    long a=0;
+    scanf("%ld %ld %ld",&i,&j,&a);
+    printf("%ld",j);
+    return 0;
+}
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+#include <stdio.h>
+int main()
+{
+    long i=0;
+    long j=0;
+    long a=0;
+    scanf("%ld %ld %ld",&i,&j,&a);
+    printf("%8d %8d %8d",i,j,a);
+    
+    return 0;
+}
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+#include <stdio.h>
+int main()
+{
+    char i=0;
+    scanf("%c",&i);
+    printf("  %c  \n %c%c%c \n%c%c%c%c%c",i,i,i,i,i,i,i,i,i);
+    
+    
+    return 0;
+}
