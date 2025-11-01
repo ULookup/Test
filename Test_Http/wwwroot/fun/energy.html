@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Energy Ball · 自嗨页</title>
+<style>
+:root{
+  --bg:#0b0f14;--text:#e6edf3;--muted:#9fb0c3;--accent:#4aa7ff;--accent2:#8be9fd;
+}
+@media(prefers-color-scheme: light){
+  :root{--bg:#f6f8fb;--text:#0b1220;--muted:#5b6b7f;--accent:#0078ff;--accent2:#00bcd4;}
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);color:var(--text);
+  font-family:system-ui,Segoe UI,Helvetica,Arial;}
+canvas{position:fixed;inset:0;z-index:0;}
+.ui{position:absolute;z-index:1;top:20px;left:20px;right:20px;display:flex;justify-content:space-between;align-items:center;}
+.score{font-size:20px;font-weight:700;}
+.restart{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#001425;
+  border:none;padding:10px 18px;border-radius:12px;cursor:pointer;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.3);}
+.restart:hover{transform:translateY(-2px);}
+footer{position:absolute;bottom:20px;width:100%;text-align:center;color:var(--muted);font-size:13px;}
+.nav-home{
+  position:fixed;top:20px;left:20px;z-index:2;
+}
+.home-btn{
+  display:inline-block;
+  background:linear-gradient(135deg,#4aa7ff,#8be9fd);
+  color:#001425;
+  font-weight:700;
+  text-decoration:none;
+  padding:10px 18px;
+  border-radius:12px;
+  font-size:15px;
+  box-shadow:0 6px 20px rgba(0,0,0,.25);
+  transition:.2s ease;
+}
+.home-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 28px rgba(0,0,0,.35);
+}
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+
+<div class="ui">
+  <div class="score">得分：<span id="score">0</span></div>
+  <button class="restart" id="restart">重新开始</button>
+</div>
+
+<div class="nav-home">
+  <a href="/" class="home-btn">🏠 返回首页</a>
+</div>
+
+<footer>© 2025 Ice Server · Energy Ball 自嗨页</footer>
+
+<script>
+const c = document.getElementById("game");
+const ctx = c.getContext("2d");
+let w,h;
+function resize(){w=c.width=innerWidth;h=c.height=innerHeight;}
+window.addEventListener("resize",resize);resize();
+
+let balls=[],score=0,playing=true;
+const scoreEl=document.getElementById("score");
+const restartBtn=document.getElementById("restart");
+
+// 生成音效
+const clickSound = new AudioContext();
+function playClick(){
+  const o = clickSound.createOscillator();
+  const g = clickSound.createGain();
+  o.connect(g); g.connect(clickSound.destination);
+  o.frequency.value = 300 + Math.random()*300;
+  o.type="sine";
+  g.gain.setValueAtTime(0.05, clickSound.currentTime);
+  o.start();
+  o.stop(clickSound.currentTime+0.1);
+}
+
+// Ball类
+class Ball{
+  constructor(){
+    this.reset();
+  }
+  reset(){
+    this.x=Math.random()*w;
+    this.y=Math.random()*h;
+    this.r=12+Math.random()*18;
+    this.vx=(Math.random()-0.5)*2;
+    this.vy=(Math.random()-0.5)*2;
+    this.life=400+Math.random()*200;
+    this.color=`hsl(${180+Math.random()*100},80%,60%)`;
+  }
+  update(){
+    this.x+=this.vx;
+    this.y+=this.vy;
+    this.life--;
+    if(this.x<0||this.x>w)this.vx*=-1;
+    if(this.y<0||this.y>h)this.vy*=-1;
+  }
+  draw(){
+    ctx.beginPath();
+    ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+    ctx.fillStyle=this.color;
+    ctx.fill();
+  }
+}
+
+function init(){
+  balls=[];
+  score=0;
+  for(let i=0;i<12;i++)balls.push(new Ball());
+}
+init();
+
+function draw(){
+  ctx.clearRect(0,0,w,h);
+  // 背景光晕
+  const grad=ctx.createRadialGradient(w/2,h/2,100,w/2,h/2,w);
+  grad.addColorStop(0,"rgba(74,167,255,0.05)");
+  grad.addColorStop(1,"transparent");
+  ctx.fillStyle=grad;
+  ctx.fillRect(0,0,w,h);
+  // 球
+  for(const b of balls){b.update();b.draw();}
+  if(playing)requestAnimationFrame(draw);
+}
+draw();
+
+// 点击检测
+function handleClick(e){
+  if(!playing)return;
+  const x=e.clientX||e.touches?.[0].clientX;
+  const y=e.clientY||e.touches?.[0].clientY;
+  for(const b of balls){
+    const dx=b.x-x,dy=b.y-y;
+    if(Math.sqrt(dx*dx+dy*dy)<=b.r){
+      playClick();
+      score+=10;
+      scoreEl.textContent=score;
+      b.reset();
+      return;
+    }
+  }
+}
+c.addEventListener("click",handleClick);
+c.addEventListener("touchstart",handleClick);
+
+// 重新开始
+restartBtn.onclick=()=>{
+  init();scoreEl.textContent="0";playing=true;draw();
+};
+</script>
+</body>
+</html>

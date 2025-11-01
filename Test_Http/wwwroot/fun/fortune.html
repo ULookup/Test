@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- 🏠 通用返回首页按钮 -->
+<div class="nav-home">
+  <a href="/" class="home-btn" title="返回首页">🏠 返回首页</a>
+</div>
+
+<style>
+.nav-home{
+  position:fixed;top:20px;left:20px;z-index:9999;
+}
+.home-btn{
+  display:inline-block;
+  background:linear-gradient(135deg,#4aa7ff,#8be9fd);
+  color:#001425;
+  font-weight:700;
+  text-decoration:none;
+  padding:10px 18px;
+  border-radius:12px;
+  font-size:15px;
+  box-shadow:0 6px 20px rgba(0,0,0,.25);
+  transition:.2s ease;
+}
+.home-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 28px rgba(0,0,0,.35);
+}
+</style>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>抽一签 · IceFortune</title>
+<style>
+  :root{
+    --bg:#0b0f14;--soft:#121821;--text:#e6edf3;--muted:#9fb0c3;--accent:#4aa7ff;--card:#182231;
+  }
+  @media(prefers-color-scheme: light){
+    :root{--bg:#f6f8fb;--soft:#eef3fa;--text:#0b1220;--muted:#5b6b7f;--accent:#0078ff;--card:#ffffff;}
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--text);
+    font:16px/1.6 system-ui,Segoe UI,Helvetica,Arial;overflow:hidden;}
+  canvas{position:fixed;inset:0;z-index:0}
+  .wrap{position:relative;z-index:1;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;height:100%;text-align:center;}
+  h1{font-size:40px;margin:0 0 10px;}
+  p{color:var(--muted);margin:0 0 30px;}
+  button{padding:14px 28px;border:none;border-radius:14px;background:var(--accent);
+    color:#02111f;font-weight:700;cursor:pointer;transition:.2s;font-size:18px;}
+  button:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(0,0,0,.25);}
+  .card{margin-top:40px;padding:20px 26px;background:var(--card);
+    border-radius:18px;min-width:260px;max-width:380px;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);animation:pop .4s ease;}
+  @keyframes pop{0%{transform:scale(.8);opacity:0;}100%{transform:scale(1);opacity:1;}}
+  .quote{font-size:20px;margin-bottom:8px;}
+  .author{font-size:14px;color:var(--muted);}
+  footer{position:absolute;bottom:16px;width:100%;text-align:center;color:var(--muted);font-size:12px;}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div class="wrap">
+  <h1>抽一签 🎴</h1>
+  <p>今天的命运是什么呢？点击下方按钮揭晓。</p>
+  <button id="drawBtn">抽一签</button>
+  <div id="result"></div>
+</div>
+<footer>© 2025 IceFortune · 前端自嗨版</footer>
+
+<script>
+// 🍀 命运签内容
+const fortunes = [
+  ["今天是修Bug的一天。","—— Ice 神秘提示"],
+  ["一切困难终会在调试器中解决。","—— 你的编译器"],
+  ["别慌，delete 前总有 new。","—— RAII之神"],
+  ["喝杯水，重新编译，也许就过了。","—— StackOverflow预言"],
+  ["Socket连接一次成功。","—— 网络守护灵"],
+  ["即使段错误，也不要怀疑人生。","—— 经验值 +1"],
+  ["你的代码将被未来的你感激。","—— 来自未来的开发者"],
+  ["printf 是真理的灯塔。","—— 调试先知"],
+  ["今天 push 的 commit 名字会让人满意。","—— Git 灵感"],
+  ["慢慢来，终会成体系。","—— 冰之导师"]
+];
+
+const result = document.getElementById("result");
+const btn = document.getElementById("drawBtn");
+
+btn.onclick = ()=>{
+  const [text,author] = fortunes[Math.floor(Math.random()*fortunes.length)];
+  result.innerHTML = `
+    <div class="card">
+      <div class="quote">${text}</div>
+      <div class="author">${author}</div>
+    </div>`;
+};
+
+// ✨ 粒子背景动画
+const c = document.getElementById("bg");
+const ctx = c.getContext("2d");
+let w,h,particles=[];
+function resize(){w=c.width=innerWidth;h=c.height=innerHeight;}
+window.addEventListener("resize",resize);resize();
+
+class Particle{
+  constructor(){
+    this.x=Math.random()*w;
+    this.y=Math.random()*h;
+    this.vx=(Math.random()-0.5)*0.4;
+    this.vy=(Math.random()-0.5)*0.4;
+    this.size=Math.random()*2+0.5;
+  }
+  update(){
+    this.x+=this.vx;this.y+=this.vy;
+    if(this.x<0||this.x>w)this.vx*=-1;
+    if(this.y<0||this.y>h)this.vy*=-1;
+  }
+  draw(){
+    ctx.beginPath();
+    ctx.arc(this.x,this.y,this.size,0,2*Math.PI);
+    ctx.fillStyle="rgba(74,167,255,0.7)";
+    ctx.fill();
+  }
+}
+for(let i=0;i<100;i++)particles.push(new Particle());
+
+function animate(){
+  ctx.clearRect(0,0,w,h);
+  for(const p of particles){p.update();p.draw();}
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
+</body>
+</html>

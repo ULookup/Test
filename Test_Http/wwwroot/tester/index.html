@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Server Tester · 简易调试首页</title>
+<style>
+  :root { --bg:#0b0f14; --panel:#11161d; --soft:#1a222c; --text:#e6edf3; --muted:#9fb0c3; --accent:#4aa7ff; --ok:#2ecc71; --bad:#ff6b6b; }
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,Segoe UI,Helvetica,Arial}
+  header{padding:18px 20px;border-bottom:1px solid #202a36;background:linear-gradient(180deg,#0d131a,#0b0f14)}
+  h1{margin:0;font-size:18px;letter-spacing:.3px}
+  .wrap{padding:16px;max-width:1200px;margin:0 auto}
+  .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
+  .card{background:var(--panel);border:1px solid #1f2937;border-radius:14px;padding:14px;box-shadow:0 2px 16px rgba(0,0,0,.25)}
+  .row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+  label{font-size:12px;color:var(--muted)}
+  input,select,textarea,button{border-radius:10px;border:1px solid #263244;background:var(--soft);color:var(--text);padding:9px 10px;outline:none}
+  input,select,button{height:38px}
+  input[type="file"]{height:auto;padding:8px}
+  textarea{width:100%;min-height:120px;resize:vertical}
+  .grow{flex:1}
+  .btn{background:#17212b;border:1px solid #223044;padding:0 14px;cursor:pointer;transition:.15s}
+  .btn:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(0,0,0,.25)}
+  .btn.primary{background:var(--accent);border-color:#2a7fd8;color:#001425;font-weight:600}
+  .pill{padding:6px 10px;border-radius:999px;border:1px solid #263244;background:#121821;color:var(--muted);font-size:12px}
+  .kv{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-bottom:8px}
+  .muted{color:var(--muted)}
+  .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace}
+  pre{background:#0f141a;border:1px solid #222e3c;border-radius:12px;padding:12px;overflow:auto;max-height:380px}
+  .status{display:flex;gap:8px;align-items:center}
+  .dot{width:10px;height:10px;border-radius:50%}
+  .ok{background:var(--ok)} .bad{background:var(--bad)} .warn{background:#f1c40f}
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap}
+  .section-title{margin:8px 0 6px;font-size:12px;color:var(--muted);letter-spacing:.3px;text-transform:uppercase}
+  .small{font-size:12px}
+  .imgbox{display:inline-block;max-width:100%;border:1px solid #263244;border-radius:12px;overflow:hidden}
+  details summary{cursor:pointer;color:var(--muted);margin-bottom:6px}
+  .ws-log{height:200px;overflow:auto;background:#0f141a;border:1px solid #222e3c;border-radius:12px;padding:10px;font-size:12px}
+  .rightcol .card{height:100%}
+  .hint{margin-top:6px;color:#9fb0c3;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Server Tester · HTTP & WebSocket 调试页</h1>
+</header>
+
+<div class="wrap">
+  <div class="grid">
+    <!-- Left: Request Builder -->
+    <div class="card">
+      <div class="row">
+        <div>
+          <label>方法</label><br/>
+          <select id="method">
+            <option>GET</option><option>POST</option><option>PUT</option><option>PATCH</option>
+            <option>DELETE</option><option>HEAD</option><option>OPTIONS</option>
+          </select>
+        </div>
+        <div class="grow">
+          <label>URL（支持相对路径，如 /api/ping）</label><br/>
+          <input id="url" class="grow" placeholder="/ 或 https://example.com/api" value="/" />
+        </div>
+        <div>
+          <label>&nbsp;</label><br/>
+          <button id="send" class="btn primary">发送请求</button>
+        </div>
+      </div>
+
+      <div class="toolbar row">
+        <span class="pill">超时(ms) <input id="timeout" type="number" value="10000" style="width:100px;margin-left:6px"/></span>
+        <span class="pill">跟随重定向 <select id="redirect" style="margin-left:6px">
+          <option value="follow" selected>follow</option><option value="error">error</option><option value="manual">manual</option>
+        </select></span>
+        <button id="addHeader" class="btn">添加请求头</button>
+        <button id="clearHeaders" class="btn">清空请求头</button>
+        <button id="asCurl" class="btn">复制为 curl</button>
+      </div>
+
+      <div id="headers"></div>
+
+      <div class="row">
+        <div style="min-width:220px">
+          <label>请求体类型</label><br/>
+          <select id="bodyType">
+            <option value="none">无</option>
+            <option value="raw">raw</option>
+            <option value="json">JSON</option>
+            <option value="form">x-www-form-urlencoded</option>
+            <option value="multipart">multipart/form-data</option>
+          </select>
+        </div>
+        <div id="fileBox" style="display:none" class="grow">
+          <label>文件（multipart 可选）</label><br/>
+          <input id="fileInput" type="file" multiple />
+        </div>
+      </div>
+
+      <div id="bodyRawBox" style="display:none">
+        <label>请求体（raw/JSON）</label>
+        <textarea id="bodyRaw" class="mono" placeholder='JSON 示例：{"name":"ice"}'></textarea>
+      </div>
+
+      <div id="bodyFormBox" style="display:none">
+        <label>表单键值（按行：key=value）</label>
+        <textarea id="bodyForm" class="mono" placeholder="a=1&#10;b=2"></textarea>
+      </div>
+
+      <details>
+        <summary>使用提示</summary>
+        <ul class="small muted">
+          <li>对你自写的服务器，推荐使用相对路径（如 <code>/</code>、<code>/echo</code>）避免 CORS。</li>
+          <li>若跨域调用外部地址，需要服务器正确返回 <code>Access-Control-Allow-Origin</code> 等 CORS 头。</li>
+          <li><code>HEAD</code>/<code>OPTIONS</code> 请求通常无响应体属正常。</li>
+        </ul>
+      </details>
+    </div>
+
+    <!-- Right: Response Viewer -->
+    <div class="card rightcol">
+      <div class="row status">
+        <div id="statusDot" class="dot warn"></div>
+        <div id="statusText" class="mono">尚未请求</div>
+        <div class="pill"><span id="time">0</span> ms</div>
+        <div class="pill">大小 <span id="size">0</span></div>
+      </div>
+
+      <div style="margin:10px 0">
+        <div class="section-title">响应头</div>
+        <pre id="respHeaders" class="mono muted">（暂无）</pre>
+      </div>
+
+      <div>
+        <div class="section-title">响应体</div>
+        <div id="imgBox" class="imgbox" style="display:none">
+          <img id="img" alt="image" style="display:block;max-width:100%;height:auto"/>
+        </div>
+        <pre id="respBody" class="mono">（暂无）</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- WebSocket Tester -->
+  <div class="card" style="margin-top:16px">
+    <div class="row">
+      <div class="grow">
+        <label>WebSocket URL（如 ws://127.0.0.1:8080/ws）</label><br/>
+        <input id="wsUrl" class="grow" placeholder="ws://host:port/path" />
+      </div>
+      <div>
+        <label>&nbsp;</label><br/>
+        <button id="wsConnect" class="btn primary">连接</button>
+      </div>
+      <div>
+        <label>&nbsp;</label><br/>
+        <button id="wsClose" class="btn">断开</button>
+      </div>
+    </div>
+    <div class="row">
+      <input id="wsMsg" class="grow" placeholder="消息内容…" />
+      <button id="wsSend" class="btn">发送</button>
+      <button id="wsClear" class="btn">清空日志</button>
+    </div>
+    <div id="wsLog" class="ws-log mono"></div>
+    <div class="hint">提示：如有反代/网关，请确认已升级为 WebSocket（101 Switching Protocols）。</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const $ = sel => document.querySelector(sel);
+  const headersBox = $("#headers");
+  const methodEl = $("#method");
+  const urlEl = $("#url");
+  const sendBtn = $("#send");
+  const timeoutEl = $("#timeout");
+  const redirectEl = $("#redirect");
+  const bodyTypeEl = $("#bodyType");
+  const bodyRawBox = $("#bodyRawBox");
+  const bodyFormBox = $("#bodyFormBox");
+  const bodyRawEl = $("#bodyRaw");
+  const bodyFormEl = $("#bodyForm");
+  const fileBox = $("#fileBox");
+  const fileInput = $("#fileInput");
+
+  const statusDot = $("#statusDot");
+  const statusText = $("#statusText");
+  const timeEl = $("#time");
+  const sizeEl = $("#size");
+  const respHeadersEl = $("#respHeaders");
+  const respBodyEl = $("#respBody");
+  const imgBox = $("#imgBox");
+  const imgEl = $("#img");
+
+  const addHeaderBtn = $("#addHeader");
+  const clearHeadersBtn = $("#clearHeaders");
+  const asCurlBtn = $("#asCurl");
+
+  function addHeaderRow(k='', v=''){
+    const row = document.createElement('div');
+    row.className = 'kv';
+    row.innerHTML = `
+      <input class="key" placeholder="Header 名" value="${k}"/>
+      <input class="val" placeholder="Header 值" value="${v}"/>
+      <button class="btn del" type="button">删除</button>
+    `;
+    row.querySelector('.del').onclick = () => row.remove();
+    headersBox.appendChild(row);
+  }
+
+  addHeaderBtn.onclick = () => addHeaderRow();
+  clearHeadersBtn.onclick = () => headersBox.innerHTML = '';
+  // 默认给一条常用
+  addHeaderRow('Accept','*/*');
+
+  bodyTypeEl.onchange = () => {
+    const t = bodyTypeEl.value;
+    bodyRawBox.style.display = (t==='raw' || t==='json') ? '' : 'none';
+    bodyFormBox.style.display = (t==='form') ? '' : 'none';
+    fileBox.style.display = (t==='multipart') ? '' : 'none';
+  };
+
+  function collectHeaders(){
+    const headers = {};
+    headersBox.querySelectorAll('.kv').forEach(row=>{
+      const k = row.querySelector('.key').value.trim();
+      const v = row.querySelector('.val').value;
+      if(k) headers[k] = v;
+    });
+    return headers;
+  }
+
+  function kvToForm(str){
+    const form = new URLSearchParams();
+    (str||'').split('\n').forEach(line=>{
+      const i = line.indexOf('=');
+      if(i>0){
+        const k = line.slice(0,i).trim();
+        const v = line.slice(i+1).trim();
+        if(k) form.append(k, v);
+      }
+    });
+    return form;
+  }
+
+  function formatJSON(text){
+    try{ return JSON.stringify(JSON.parse(text), null, 2); }
+    catch{ return text; }
+  }
+
+  function setStatus(ok, code, text){
+    statusDot.className = 'dot ' + (code==0?'warn': ok?'ok':'bad');
+    statusText.textContent = code? `${code} ${text||''}` : '请求未完成';
+  }
+
+  function guessIsImage(ct){
+    return typeof ct==='string' && ct.startsWith('image/');
+  }
+
+  function abSize(ab){
+    return (ab?.byteLength || 0) + ' B';
+  }
+
+  async function doFetch(){
+    const controller = new AbortController();
+    const tid = setTimeout(()=>controller.abort('timeout'), Math.max(0, Number(timeoutEl.value)||0));
+
+    const method = methodEl.value;
+    const url = urlEl.value.trim() || '/';
+    const headers = collectHeaders();
+    const opts = { method, headers, redirect: redirectEl.value, signal: controller.signal };
+
+    // body
+    const t = bodyTypeEl.value;
+    try{
+      if(t==='raw'){
+        opts.body = bodyRawEl.value;
+      }else if(t==='json'){
+        const obj = bodyRawEl.value ? JSON.parse(bodyRawEl.value) : {};
+        opts.body = JSON.stringify(obj);
+        if(!Object.keys(headers).some(k=>k.toLowerCase()==='content-type')) {
+          opts.headers['Content-Type'] = 'application/json';
+        }
+      }else if(t==='form'){
+        const form = kvToForm(bodyFormEl.value);
+        opts.body = form;
+        if(!Object.keys(headers).some(k=>k.toLowerCase()==='content-type')) {
+          opts.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
+        }
+      }else if(t==='multipart'){
+        const fd = new FormData();
+        for(const f of (fileInput.files||[])){ fd.append('file', f, f.name); }
+        // 也可同时附带文本键值（从 form 文本框解析）
+        const pairs = kvToForm(bodyFormEl.value);
+        for(const [k,v] of pairs.entries()) fd.append(k, v);
+        opts.body = fd;
+        // 浏览器会自动设置 multipart 边界，不要手动写 Content-Type
+        Object.keys(headers).forEach(k=>{
+          if(k.toLowerCase()==='content-type') delete opts.headers[k];
+        });
+      }
+    }catch(e){
+      setStatus(false, 0, e.message);
+      respBodyEl.textContent = '请求体处理失败：' + e.message;
+      respHeadersEl.textContent = '';
+      imgBox.style.display = 'none';
+      sizeEl.textContent = '0';
+      timeEl.textContent = '0';
+      clearTimeout(tid);
+      return;
+    }
+
+    const start = performance.now();
+    try{
+      const res = await fetch(url, opts);
+      const elapsed = Math.round(performance.now() - start);
+      timeEl.textContent = String(elapsed);
+
+      // headers
+      const hs = [];
+      res.headers.forEach((v,k)=>hs.push(k+': '+v));
+      respHeadersEl.textContent = hs.join('\n') || '（无）';
+
+      // body
+      imgBox.style.display = 'none';
+      let bodyText = '';
+      let size = '';
+      const ct = res.headers.get('content-type') || '';
+
+      if(guessIsImage(ct)){
+        const buf = await res.arrayBuffer();
+        size = abSize(buf);
+        const blob = new Blob([buf], { type: ct });
+        imgEl.src = URL.createObjectURL(blob);
+        imgBox.style.display = 'inline-block';
+        respBodyEl.textContent = '(图片预览在上方)';
+      }else if(ct.includes('application/json')){
+        const text = await res.text();
+        size = new TextEncoder().encode(text).length + ' B';
+        respBodyEl.textContent = formatJSON(text);
+      }else{
+        const text = await res.text();
+        size = new TextEncoder().encode(text).length + ' B';
+        respBodyEl.textContent = text || '（空）';
+      }
+      sizeEl.textContent = size;
+      setStatus(res.ok, res.status, res.statusText);
+    }catch(err){
+      clearTimeout(tid);
+      const elapsed = Math.round(performance.now() - start);
+      timeEl.textContent = String(elapsed);
+      setStatus(false, 0, String(err));
+      respHeadersEl.textContent = '';
+      respBodyEl.textContent = '请求失败：' + String(err);
+      imgBox.style.display = 'none';
+      sizeEl.textContent = '0';
+      return;
+    }finally{
+      clearTimeout(tid);
+    }
+  }
+
+  sendBtn.onclick = doFetch;
+
+  // curl 生成
+  asCurlBtn.onclick = ()=>{
+    const method = methodEl.value;
+    const url = urlEl.value.trim() || '/';
+    const headers = collectHeaders();
+    const parts = ['curl', '-i', '-X', JSON.stringify(method)];
+    Object.entries(headers).forEach(([k,v])=>{
+      parts.push('-H', JSON.stringify(k+': '+v));
+    });
+    const t = bodyTypeEl.value;
+    if(t==='raw'){
+      if(bodyRawEl.value) parts.push('--data-binary', JSON.stringify(bodyRawEl.value));
+    }else if(t==='json'){
+      parts.push('-H', JSON.stringify('Content-Type: application/json'));
+      const obj = bodyRawEl.value ? (()=>{ try{return JSON.parse(bodyRawEl.value)}catch{return bodyRawEl.value} })() : {};
+      const payload = (typeof obj==='string')? obj : JSON.stringify(obj);
+      if(payload) parts.push('--data', JSON.stringify(payload));
+    }else if(t==='form'){
+      // 转为 -d k=v
+      const pairs = kvToForm(bodyFormEl.value);
+      for(const [k,v] of pairs.entries()) parts.push('-d', JSON.stringify(`${k}=${v}`));
+    }else if(t==='multipart'){
+      const pairs = kvToForm(bodyFormEl.value);
+      for(const [k,v] of pairs.entries()) parts.push('-F', JSON.stringify(`${k}=${v}`));
+      if(fileInput.files?.length){
+        // 仅提示占位，真实文件路径需本地存在
+        for(const f of fileInput.files) parts.push('-F', JSON.stringify(`file=@${f.name}`));
+      }
+    }
+    parts.push(JSON.stringify(url));
+    const cmd = parts.join(' ');
+    navigator.clipboard.writeText(cmd).then(()=>{
+      asCurlBtn.textContent = '已复制';
+      setTimeout(()=>asCurlBtn.textContent='复制为 curl',1200);
+    });
+  };
+
+  // WebSocket
+  let ws = null;
+  const wsUrl = $("#wsUrl"), wsConnect = $("#wsConnect"), wsClose=$("#wsClose");
+  const wsMsg = $("#wsMsg"), wsSend=$("#wsSend"), wsClear=$("#wsClear"), wsLog=$("#wsLog");
+
+  function logWS(txt, type='info'){
+    const time = new Date().toLocaleTimeString();
+    const line = document.createElement('div');
+    const color = type==='in'?'#2ecc71':type==='out'?'#4aa7ff':type==='err'?'#ff6b6b':'#9fb0c3';
+    line.style.color = color;
+    line.textContent = `[${time}] ${txt}`;
+    wsLog.appendChild(line);
+    wsLog.scrollTop = wsLog.scrollHeight;
+  }
+
+  wsConnect.onclick = ()=>{
+    if(ws && (ws.readyState===WebSocket.OPEN || ws.readyState===WebSocket.CONNECTING)){
+      logWS('连接已存在', 'info'); return;
+    }
+    try{
+      ws = new WebSocket(wsUrl.value.trim());
+      ws.onopen = ()=>logWS('WS 已连接','info');
+      ws.onmessage = (e)=>logWS('⬅ ' + (typeof e.data==='string'? e.data : '[binary]'), 'in');
+      ws.onerror = (e)=>logWS('WS 错误', 'err');
+      ws.onclose = ()=>logWS('WS 已关闭','info');
+    }catch(e){
+      logWS('创建连接失败：'+e.message,'err');
+    }
+  };
+
+  wsClose.onclick = ()=>{ if(ws){ ws.close(); } };
+
+  wsSend.onclick = ()=>{
+    if(!ws || ws.readyState!==WebSocket.OPEN){ logWS('未连接','err'); return; }
+    const m = wsMsg.value;
+    ws.send(m);
+    logWS('➡ ' + m, 'out');
+  };
+
+  wsClear.onclick = ()=>{ wsLog.innerHTML=''; };
+
+})();
+</script>
+</body>
+</html>

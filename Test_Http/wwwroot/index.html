@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <!-- 🏠 通用返回首页按钮 -->
+<div class="nav-home">
+  <a href="/" class="home-btn" title="返回首页">🏠 返回首页</a>
+</div>
+
+<style>
+.nav-home{
+  position:fixed;top:20px;left:20px;z-index:9999;
+}
+.home-btn{
+  display:inline-block;
+  background:linear-gradient(135deg,#4aa7ff,#8be9fd);
+  color:#001425;
+  font-weight:700;
+  text-decoration:none;
+  padding:10px 18px;
+  border-radius:12px;
+  font-size:15px;
+  box-shadow:0 6px 20px rgba(0,0,0,.25);
+  transition:.2s ease;
+}
+.home-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 28px rgba(0,0,0,.35);
+}
+</style>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ice Server · 首页</title>
+<style>
+  :root{
+    --bg:#0b0f14;--soft:#121821;--text:#e6edf3;--muted:#9fb0c3;--accent:#4aa7ff;--accent2:#8be9fd;
+  }
+  @media(prefers-color-scheme: light){
+    :root{--bg:#f6f8fb;--soft:#eef3fa;--text:#0b1220;--muted:#5b6b7f;--accent:#0078ff;--accent2:#00bcd4;}
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--text);
+    font:16px/1.5 system-ui,Segoe UI,Helvetica,Arial;overflow:hidden;}
+  canvas{position:fixed;inset:0;z-index:0;}
+  .wrap{position:relative;z-index:1;display:flex;flex-direction:column;
+        align-items:center;justify-content:center;height:100%;text-align:center;}
+  h1{font-size:48px;margin:0 0 6px;letter-spacing:.5px;}
+  p{color:var(--muted);margin:0 0 36px;}
+  .saying{font-size:18px;color:var(--accent2);margin-bottom:40px;min-height:24px;animation:fade 0.8s ease;}
+  .nav{display:flex;flex-wrap:wrap;gap:20px;justify-content:center;}
+  a.btn{display:inline-block;min-width:200px;padding:16px 26px;border-radius:16px;
+        background:linear-gradient(135deg,var(--accent),var(--accent2));color:#02111f;
+        font-weight:700;text-decoration:none;font-size:18px;transition:.25s;}
+  a.btn:hover{transform:translateY(-3px) scale(1.05);
+        box-shadow:0 12px 28px rgba(74,167,255,.35);}
+  footer{position:absolute;bottom:18px;width:100%;text-align:center;color:var(--muted);font-size:13px;}
+  .emoji{font-size:46px;animation:float 4s ease-in-out infinite;margin-bottom:8px;}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  @keyframes fade{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div class="wrap">
+  <div class="emoji">🧊</div>
+  <h1>Ice Server</h1>
+  <div id="saying" class="saying">—— 正在加载你的命运签 ——</div>
+  <div class="nav">
+    <a href="/tester/index.html" class="btn">HTTP 调试页</a>
+    <a href="/fun/fortune.html" class="btn">命运签 🎴</a>
+    <a href="/404.html" class="btn">404 页面示例</a>
+  </div>
+</div>
+<footer>© 2025 Ice Server · Playful Edition</footer>
+
+<script>
+// ✨ 粒子背景
+const c = document.getElementById("bg");
+const ctx = c.getContext("2d");
+let w,h,particles=[];
+function resize(){w=c.width=innerWidth;h=c.height=innerHeight;}
+window.addEventListener("resize",resize);resize();
+
+class Particle{
+  constructor(){
+    this.x=Math.random()*w;
+    this.y=Math.random()*h;
+    this.vx=(Math.random()-0.5)*0.3;
+    this.vy=(Math.random()-0.5)*0.3;
+    this.size=Math.random()*2+0.6;
+  }
+  update(){
+    this.x+=this.vx;this.y+=this.vy;
+    if(this.x<0||this.x>w)this.vx*=-1;
+    if(this.y<0||this.y>h)this.vy*=-1;
+  }
+  draw(){
+    ctx.beginPath();
+    ctx.arc(this.x,this.y,this.size,0,2*Math.PI);
+    ctx.fillStyle="rgba(74,167,255,0.7)";
+    ctx.fill();
+  }
+}
+for(let i=0;i<90;i++)particles.push(new Particle());
+function animate(){
+  ctx.clearRect(0,0,w,h);
+  for(const p of particles){p.update();p.draw();}
+  requestAnimationFrame(animate);
+}
+animate();
+
+// 🧠 彩蛋句子
+const sayings = [
+  "delete 前要记得 new，人生也要先建设再清理。",
+  "今天适合写线程池，少量死锁无伤大雅。",
+  "没有什么是一次编译不能解决的，如果有，就再编一次。",
+  "printf 是真理的灯塔。",
+  "调试比写代码更能看出一个人的修养。",
+  "即使段错误，也不要怀疑人生。",
+  "慢一点没关系，关键是要理解底层。",
+  "今天 push 的 commit 名字会让人满意。",
+  "Socket连接将一次成功。",
+  "assert 只是温柔地提醒你，别再犯傻。",
+  "人生如内存泄漏，总得找个地方释放自己。",
+  "RAII 之神在注视着你。",
+  "你一定可以封装出完美的 TcpServer。",
+  "每一次崩溃，都是成长的代价。",
+  "休息一下，线程也需要 yield。"
+];
+
+function showSaying(){
+  const s = sayings[Math.floor(Math.random()*sayings.length)];
+  document.getElementById("saying").textContent = `“${s}”`;
+}
+showSaying();
+</script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <!-- 🏠 通用返回首页按钮 -->
+<div class="nav-home">
+  <a href="/" class="home-btn" title="返回首页">🏠 返回首页</a>
+</div>
+
+<style>
+.nav-home{
+  position:fixed;top:20px;left:20px;z-index:9999;
+}
+.home-btn{
+  display:inline-block;
+  background:linear-gradient(135deg,#4aa7ff,#8be9fd);
+  color:#001425;
+  font-weight:700;
+  text-decoration:none;
+  padding:10px 18px;
+  border-radius:12px;
+  font-size:15px;
+  box-shadow:0 6px 20px rgba(0,0,0,.25);
+  transition:.2s ease;
+}
+.home-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 28px rgba(0,0,0,.35);
+}
+</style>
+
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>404 · 页面走丢了</title>
+<meta name="robots" content="noindex" />
+<style>
+  :root{
+    --bg:#0b0f14;--panel:#101722;--soft:#162131;--text:#e6edf3;--muted:#9fb0c3;
+    --acc:#66b3ff;--acc2:#8be9fd;--ok:#2ecc71;--warn:#f1c40f;
+  }
+  @media (prefers-color-scheme: light){
+    :root{ --bg:#f6f8fb; --panel:#ffffff; --soft:#eef3fa; --text:#0b1220; --muted:#5b6b7f; --acc:#1769ff; --acc2:#00bcd4; }
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;background:radial-gradient(1200px 800px at 80% -20%,rgba(102,179,255,.18),transparent 60%),
+             radial-gradient(900px 600px at -10% 110%,rgba(139,233,253,.12),transparent 60%),var(--bg);
+    color:var(--text);font:16px/1.55 system-ui,Segoe UI,Helvetica,Arial;
+    display:grid;place-items:center;overflow:hidden;
+  }
+  .wrap{position:relative;max-width:920px;width:92%;padding:28px;border-radius:18px;
+        background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
+        border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(8px);box-shadow:0 10px 40px rgba(0,0,0,.25)}
+  .flex{display:flex;gap:28px;align-items:center;flex-wrap:wrap}
+  h1{font-size:48px;letter-spacing:.5px;margin:0 0 6px}
+  p{margin:.4em 0;color:var(--muted)}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
+         background:var(--soft);border:1px solid rgba(255,255,255,.08);color:var(--muted);font-size:12px}
+  .btn{appearance:none;border:1px solid rgba(255,255,255,.14);background:var(--soft);color:var(--text);
+       padding:10px 14px;border-radius:12px;cursor:pointer;transition:.15s;font-weight:600}
+  .btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(0,0,0,.2)}
+  .btn.primary{background:linear-gradient(180deg,var(--acc),var(--acc2));border-color:transparent;color:#02111f}
+  .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+  .card{background:var(--panel);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px}
+  .meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+  .key{font-size:12px;color:var(--muted)}
+  .val{font-size:14px}
+  .hint{margin-top:10px;color:var(--muted);font-size:12px}
+  /* SVG + glow */
+  .art{position:relative;flex:0 0 280px;aspect-ratio:1/1;border-radius:16px;overflow:hidden}
+  .glow{position:absolute;inset:-40%;background:radial-gradient(closest-side,rgba(102,179,255,.25),transparent 70%);filter:blur(30px);animation:float 8s ease-in-out infinite}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  .num{
+    font-weight:900;font-stretch:ultra-expanded;letter-spacing:.02em;
+    background:linear-gradient(180deg,#ffffff,#c8e6ff 60%,#8bd5ff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 6px 20px rgba(102,179,255,.35));
+  }
+  .scan{position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,rgba(139,233,253,.9),transparent);animation:scan 3s linear infinite}
+  @keyframes scan{0%{transform:translateY(-2px)}100%{transform:translateY(102%)}}
+  /* Responsive */
+  @media (max-width:720px){
+    h1{font-size:36px}
+    .art{flex:1 1 100%;max-width:100%}
+    .meta{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="flex">
+      <!-- Illustration -->
+      <div class="art card" aria-hidden="true">
+        <div class="glow"></div>
+        <div class="scan"></div>
+        <svg viewBox="0 0 320 320" width="100%" height="100%" role="img">
+          <defs>
+            <linearGradient id="g" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#66b3ff"/><stop offset="1" stop-color="#8be9fd"/>
+            </linearGradient>
+          </defs>
+          <rect x="18" y="18" width="284" height="284" rx="22" fill="none" stroke="url(#g)" stroke-width="2" opacity=".6"/>
+          <g transform="translate(25,34)">
+            <text x="0" y="110" class="num" style="font-size:120px">404</text>
+            <g transform="translate(0,140)" opacity=".9">
+              <rect width="260" height="8" rx="4" fill="url(#g)"/>
+              <rect y="20" width="208" height="8" rx="4" fill="url(#g)" opacity=".75"/>
+              <rect y="40" width="156" height="8" rx="4" fill="url(#g)" opacity=".55"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Content -->
+      <div style="min-width:260px;flex:1">
+        <span class="badge mono">🧭 你来到了没有路由的地方</span>
+        <h1>页面走丢了</h1>
+        <p>很抱歉，这个地址不存在或已被移动。你可以回到首页，或检查是否为拼写/路由配置问题。</p>
+
+        <div class="btns">
+          <button class="btn primary" id="goHome">返回首页</button>
+          <button class="btn" id="back">后退</button>
+          <button class="btn" id="copyUrl">复制当前路径</button>
+          <a class="btn" id="mailto" href="#" rel="nofollow">反馈此问题</a>
+        </div>
+
+        <div class="meta">
+          <div class="card">
+            <div class="key">请求路径</div>
+            <div class="val mono" id="path">/</div>
+          </div>
+          <div class="card">
+            <div class="key">时间戳</div>
+            <div class="val mono" id="ts">-</div>
+          </div>
+          <div class="card">
+            <div class="key">来源页面</div>
+            <div class="val mono" id="ref">（无）</div>
+          </div>
+          <div class="card">
+            <div class="key">可能的原因</div>
+            <div class="val">链接过期、路由未匹配、静态资源路径错误、区分大小写、构建后 publicPath 配置。</div>
+          </div>
+        </div>
+        <div class="hint">快捷键：<span class="mono">H</span> 返回首页，<span class="mono">Backspace / Alt+←</span> 后退。</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  const $ = sel => document.querySelector(sel);
+  const path = $("#path"), ts = $("#ts"), ref = $("#ref");
+  const goHome = $("#goHome"), back=$("#back"), copy=$("#copyUrl"), mail=$("#mailto");
+
+  // 显示请求信息
+  path.textContent = location.pathname + location.search + location.hash;
+  ts.textContent = new Date().toLocaleString();
+  ref.textContent = document.referrer ? document.referrer : "（无）";
+
+  // 按钮行为
+  goHome.onclick = () => { location.href = "/"; };
+  back.onclick = () => { history.length > 1 ? history.back() : location.href = "/"; };
+  copy.onclick = async () => {
+    const txt = location.href;
+    try{ await navigator.clipboard.writeText(txt); copy.textContent = "已复制"; setTimeout(()=>copy.textContent="复制当前路径",1200); }
+    catch{ alert("复制失败，请手动复制：\n"+txt); }
+  };
+
+  // 反馈邮件（可改为你的邮箱）
+  const subject = encodeURIComponent("404 反馈 - " + location.hostname);
+  const body = encodeURIComponent([
+    "页面无法访问：", location.href,
+    "时间：", new Date().toString(),
+    "来源：", document.referrer || "（无）",
+    "\n请描述你期望访问到的内容："
+  ].join("\n"));
+  mail.href = "mailto:admin@example.com?subject=" + subject + "&body=" + body;
+
+  // 键盘快捷键
+  window.addEventListener("keydown", (e)=>{
+    if(e.key.toLowerCase()==="h"){ e.preventDefault(); goHome.click(); }
+  });
+})();
+</script>
+</body>
+</html>
