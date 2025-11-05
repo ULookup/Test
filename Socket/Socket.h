@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <string>
 #include <memory>
+#include <fcntl.h>
 
 namespace isframe::net{
     
@@ -35,6 +36,8 @@ namespace isframe::net{
         virtual void Close() noexcept = 0;
         virtual void ShutDown(int how) noexcept = 0;
 
+        virtual void SetNonBlock() = 0;
+
          [[nodiscard]] virtual int fd() const noexcept = 0;
 
     };
@@ -56,6 +59,8 @@ namespace isframe::net{
         ssize_t SendTo(const std::string &outdata) noexcept override;
         void Close() noexcept override;
         void ShutDown(int how) noexcept override;
+
+        void SetNonBlock();
 
         [[nodiscard]] int fd() const noexcept override;
 

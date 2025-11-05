@@ -115,4 +115,10 @@ namespace isframe::net{
     {
         return _sockfd;
     }
+
+    void TcpSocket::SetNonBlock()
+    {
+        int flags = fcntl(_sockfd, F_GETFL, 0);
+        fcntl(_sockfd, F_SETFL, flags | O_NONBLOCK);
+    }
 }
