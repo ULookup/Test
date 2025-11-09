@@ -14,18 +14,22 @@ class TimerTask
 {
 public:
     TimerTask(uint64_t id, uint32_t delay, const TaskFunc &cb)
-        : _id(id), _timeout(delay), _task_cb(cb)
+        : _id(id), _timeout(delay), _task_cb(cb), _is_cancel(0)
         {}
 
     void SetRelease(const ReleaseFunc &cb) { _release_cb = cb; }
 
+    void Cancel() { _is_cancel = true; }
     uint32_t DelayTime() { return _timeout; }
 
     ~TimerTask(){
-        _task_cb();
+        if(!_is_cancel){
+            _task_cb();
+        }
         _release_cb();
     }
 private:
+    bool _is_cancel;
     uint64_t _id;   //定时器任务id
     uint32_t _timeout; //定时器超时时间
     TaskFunc _task_cb;  //定时器对象要执行的定时任务
@@ -69,6 +73,16 @@ public:
     void RunTimerTask(){
         _tick = (_tick + 1) % _capacity;
         _timewheel[_tick].clear();
+    }
+    void CancelTimer(uint64_t id){
+        auto pos = _timers.find(id);
+        if(pos == _timers.end()){
+            return;
+        }
+        SharedPtr ptr = pos->second.lock();
+        if(ptr){
+            ptr->Cancel();
+        }
     }
 private:
     int _capacity;
