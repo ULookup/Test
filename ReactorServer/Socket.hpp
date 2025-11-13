@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Logger/Logger.h"
 #include "InetAddress.hpp"
 #include <string>
 #include <memory>
@@ -20,21 +21,20 @@ public:
     virtual ssize_t Recv(void *buf, size_t len, int flag) = 0;
     virtual ssize_t Send(void *buf, size_t len, int flag) = 0;
 
-    virtual void Close();
+    virtual void Close() = 0;
 
-    virtual int Fd();
+    virtual int Fd() = 0;
 };
 
 class TcpSocket : public Socket
 {
 public:
-    TcpSocket() = default;
     TcpSocket(int sockfd = -1) : _sockfd() {}
 
     bool Create() override {
-        _sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_TCP);
+        _sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
         if(_sockfd < 0) {
-            //for log...
+            LOG_ERROR << "create socket fail!";
             return false;
         }
         return true;
@@ -44,7 +44,7 @@ public:
         InetAddress addr(port);
         int ret = bind(_sockfd, (struct sockaddr*)addr.GetSockAddr(), addr.GetSockLen());
         if(ret < 0) {
-            //for log...
+            LOG_ERROR << "bind socket fail!";
             return false;
         }
         return true;
@@ -53,7 +53,7 @@ public:
     bool Listen(int backlog = SOMAXCONN) override {
         int ret = listen(_sockfd, backlog);
         if(ret < 0) {
-            //for log...
+            LOG_ERROR << "listen socket fail!";
             return false;
         }
         return true;
@@ -64,7 +64,7 @@ public:
         socklen_t len = sizeof(peer);
         int fd = accept(_sockfd, (struct sockaddr*)&peer, &len);
         if(fd < 0) {
-            //for log...
+            LOG_ERROR << "accept fail!";
             return nullptr;
         }
         clientaddr.SetSockAddr(peer);
@@ -74,7 +74,7 @@ public:
     bool Connect(InetAddress &addr) override {
         int ret = connect(_sockfd, (struct sockaddr*)addr.GetSockAddr(), addr.GetSockLen());
         if(ret < 0) {
-            //for log...
+            LOG_ERROR << "connect fail!";
             return false;
         }
         return true;
@@ -84,10 +84,10 @@ public:
         ssize_t ret = recv(_sockfd, buf, len, flag);
         if(ret <= 0) {
             if(errno == EAGAIN || errno == EINTR) {
-                //for log...
+                LOG_INFO << "recv EAGAIN or EINTR";
                 return 0;
             }
-            //for log...
+            LOG_ERROR << "recv fail!";
             return -1;
         }
         return ret;
@@ -101,7 +101,7 @@ public:
     ssize_t Send(void *buf, size_t len, int flag = 0) override {
         ssize_t ret = send(_sockfd, buf, len, flag);
         if(ret < 0) {
-            //for log...
+            LOG_ERROR << "send fail!";
             return -1;
         }
         return ret;
@@ -121,8 +121,11 @@ public:
 
     bool CreateServer(uint16_t port) {
         if(Create() == false) return false;
-        if(Bind(port == false)) return false;
+        LOG_DEBUG << "Create Sockfd success!";
+        if(Bind(port) == false) return false;
+        LOG_DEBUG << "Bind Sockfd success!";
         if(Listen() == false) return false;
+        LOG_DEBUG << "Listen Sockfd success!";
         SetNonBlock();
         ReuseAddress();
         return true;
@@ -144,6 +147,9 @@ public:
         fcntl(_sockfd, F_SETFL, flag | O_NONBLOCK);
     }
     
+    int Fd() override {
+        return _sockfd;
+    }
 private:
     int _sockfd;
 };
