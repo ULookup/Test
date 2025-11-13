@@ -1,66 +1,51 @@
 #pragma once
 
+#include "Logger/Logger.h"
 #include <cstdint>
 #include <functional>
 #include <sys/epoll.h>
 
 using EventCallback = std::function<void()>;
 
+class EventLoop;
+
 class Channel
 {
 public:
-    Channel(int fd) : _fd(fd) {}
-    void SetRevents(uint32_t events) { _revents = events;}
-    void SetReadCallback(const EventCallback &cb) { _read_callback = cb; }
-    void SetWriteCallback(const EventCallback &cb) { _write_callback = cb; }
-    void SetErrorCallback(const EventCallback &cb) { _error_callback = cb; }
-    void SetCloseCallback(const EventCallback &cb) { _close_callback = cb; }
-    void SetEventCallback(const EventCallback &cb) { _event_callback = cb; }
+    Channel(EventLoop *loop, int fd);
+    void SetRevents(uint32_t events);
+    void SetReadCallback(const EventCallback &cb);
+    void SetWriteCallback(const EventCallback &cb);
+    void SetErrorCallback(const EventCallback &cb);
+    void SetCloseCallback(const EventCallback &cb);
+    void SetEventCallback(const EventCallback &cb);
 
     /* brief: 获取想要监控的事件 */
-    uint32_t GetEvents() { return _events; }
-    uint32_t GetFd() { return _fd; }
+    uint32_t GetEvents();
+    uint32_t GetFd();
     /* brief: 当前是否监控可读 */
-    bool ReadAble() { return (_events & EPOLLIN); }
+    bool ReadAble();
     /* brief: 当前是否监控可写 */
-    bool WriteAble() { return (_events & EPOLLOUT); }
+    bool WriteAble();
     /* brief: 启动读事件监控 */
-    void EnableRead() { _events |= EPOLLIN; }
+    void EnableRead();
     /* brief: 启动写事件监控 */
-    void EnableWrite() { _events |= EPOLLOUT; }
+    void EnableWrite();
     /* brief: 关闭读事件监控 */
-    void DisableRead() { _events &= ~EPOLLIN; } 
+    void DisableRead();
     /* brief: 关闭写事件监控 */
-    void DisableWrite() { _events &= ~EPOLLOUT; }
+    void DisableWrite();
     /* brief: 关闭所有事件监控 */
-    void DisableAll() { _events = 0; }
+    void DisableAll();
     /* brief: 移除监控*/
     void Remove();
+
+    void Update();
     /* brief: 连接触发事件就调用这个函数*/
-    void HandlerEvent() {
-        if ((_revents & EPOLLIN) || (_revents & EPOLLRDHUP) || (_revents & EPOLLPRI)) {
-            if (_read_callback) _read_callback();
-
-            if (_event_callback) _event_callback();
-        }
-
-        if (_revents & EPOLLOUT) {
-            if (_write_callback) _write_callback();
-
-            if (_event_callback) _event_callback();
-        } else if (_revents & EPOLLERR) {
-            if (_event_callback) _event_callback();
-
-            if (_error_callback) _error_callback();
-        } else if (_revents & EPOLLHUP) {
-            if (_event_callback) _event_callback();
-
-            if (_close_callback) _close_callback();
-        }
-        
-    }
+    void HandlerEvent();
 private:
     int _fd;
+    EventLoop* _loop;
     uint32_t _events;
     uint32_t _revents;
     EventCallback _read_callback;
