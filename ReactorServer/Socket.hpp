@@ -29,7 +29,7 @@ public:
 class TcpSocket : public Socket
 {
 public:
-    TcpSocket(int sockfd = -1) : _sockfd() {}
+    TcpSocket(int sockfd = -1) : _sockfd(sockfd) {}
 
     bool Create() override {
         _sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -37,6 +37,7 @@ public:
             LOG_ERROR << "create socket fail!";
             return false;
         }
+        LOG_DEBUG << "create socket success";
         return true;
     }
 
@@ -47,6 +48,7 @@ public:
             LOG_ERROR << "bind socket fail!";
             return false;
         }
+        LOG_DEBUG << "bind socket success";
         return true;
     }
 
@@ -56,6 +58,7 @@ public:
             LOG_ERROR << "listen socket fail!";
             return false;
         }
+        LOG_DEBUG << "listen socket success";
         return true;
     }
 
@@ -90,6 +93,7 @@ public:
             LOG_ERROR << "recv fail!";
             return -1;
         }
+        LOG_DEBUG << "recv successfully";
         return ret;
     }
 
@@ -101,13 +105,18 @@ public:
     ssize_t Send(void *buf, size_t len, int flag = 0) override {
         ssize_t ret = send(_sockfd, buf, len, flag);
         if(ret < 0) {
-            LOG_ERROR << "send fail!";
+            if(errno == EAGAIN || errno == EINTR) {
+                LOG_INFO << "send EAGAIN or EINTR";
+                return 0;
+            }
+            LOG_ERROR << "SOCKET SEND FAILED";
             return -1;
         }
         return ret;
     }
 
     ssize_t NonBlockSend(void *buf, size_t len) {
+        if(len == 0) return 0;
         /* brief: MSG_DONTWAIT 表示当前接收为非阻塞*/
         return Send(buf, len, MSG_DONTWAIT);
     }
@@ -134,7 +143,9 @@ public:
     bool CreatClient(uint16_t port, const std::string &ip) {
         InetAddress peer(port, ip);
         if(Create() == false) return false;
+        LOG_DEBUG << "创建套接字";
         if(Connect(peer) == false) return false;
+        LOG_DEBUG << "发起三次握手";
         return true;
     }
 
