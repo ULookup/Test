@@ -64,21 +64,24 @@ TimerTask::TimerTask(uint64_t id, uint32_t delay, const TaskFunc &cb)
         timerfd_settime(timerfd, 0, &itime, NULL);
         return timerfd;
     }
-    void TimeWheel::ReadTimeFd() {
+    int TimeWheel::ReadTimeFd() {
         uint64_t times;
+        // 有可能因为其他描述符的事件处理较长，然后在处理定时器描述符事件的时候，可能超时了很多次
+        // read读取的times就是从上一次read之后超时的次数
         int ret = read(_timerfd, &times, 8);
         if(ret < 0) {
             abort();
         }
-        return;
+        return times;
     }
     void TimeWheel::RunTimerTask(){
         _tick = (_tick + 1) % _capacity;
         _timewheel[_tick].clear();
     }
     void TimeWheel::OnTime() {
-        ReadTimeFd();
-        RunTimerTask();
+        int times = ReadTimeFd();
+        for(int i = 0; i < times; i++)
+            RunTimerTask();
     }
     void TimeWheel::AddTimerInLoop(uint64_t id, uint32_t delay, const TaskFunc &cb){
         //SharedPtr ptr(new TimerTask(id, delay, cb));
