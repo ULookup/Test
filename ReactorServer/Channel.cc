@@ -34,26 +34,20 @@ void Channel::Update() { return _loop->UpdateEvent(this); }
 /* brief: 连接触发事件就调用这个函数*/
 void Channel::HandlerEvent() {
     if ((_revents & EPOLLIN) || (_revents & EPOLLRDHUP) || (_revents & EPOLLPRI)) {
-        if (_event_callback) _event_callback();
-        LOG_DEBUG << "_EVENT_CALLBACK()";
         if (_read_callback) _read_callback();
-        LOG_DEBUG << "_READ_CALLBACK()";
+        //LOG_DEBUG << "_READ_CALLBACK()";
     }
     if (_revents & EPOLLOUT) {
-        if (_event_callback) _event_callback();
-        LOG_DEBUG << "_EVENT_CALLBACK()";
         if (_write_callback) _write_callback();
-        LOG_DEBUG << "_WRITE_CALLBACK()";
+        //LOG_DEBUG << "_WRITE_CALLBACK()";
 
     } else if (_revents & EPOLLERR) {
-        if (_event_callback) _event_callback();
-        LOG_DEBUG << "_EVENT_CALLBACK()";
         if (_error_callback) _error_callback();
-        LOG_DEBUG << "_ERROR_CALLBACK()";
+        //LOG_DEBUG << "_ERROR_CALLBACK()";
     } else if (_revents & EPOLLHUP) {
-        if (_event_callback) _event_callback();
-        LOG_DEBUG << "_EVENT_CALLBACK()";
         if (_close_callback) _close_callback();
-        LOG_DEBUG << "_CLOSE_CALLBACK()";
+        //LOG_DEBUG << "_CLOSE_CALLBACK()";
     }
+    if (_event_callback) _event_callback();
+        //LOG_DEBUG << "_EVENT_CALLBACK()";
 }

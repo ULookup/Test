@@ -13,6 +13,7 @@ class Channel
 {
 public:
     Channel(EventLoop *loop, int fd);
+    void SetFd(int fd);
     void SetRevents(uint32_t events);
     void SetReadCallback(const EventCallback &cb);
     void SetWriteCallback(const EventCallback &cb);
