@@ -6,6 +6,8 @@
 #include "Any.hpp"
 #include <cstdint>
 
+#define BUFFER_SIZE 65535
+
 enum ConnectStatus
 {
     DISCONNECTED,   //连接关闭状态
@@ -24,7 +26,7 @@ class Connection : public std::enable_shared_from_this<Connection>
 public:
     Connection(EventLoop *loop, uint64_t conn_id, int sockfd) :
         _conn_id(conn_id), _sockfd(sockfd), _enable_inactive_release(false),
-        _loop(loop), _status(CONNECTING), _socket(_sockfd),
+        _loop(loop), _status(CONNECTING), _socket(sockfd),
         _channel(_loop, _sockfd) 
         {
             _channel.SetCloseCallback(std::bind(&Connection::HandleClose, this));
@@ -46,9 +48,14 @@ public:
     void SetMessageCallback(const MessageCallback &msgcb) { _message_callback = msgcb; }
     void SetClosedCallback(const ClosedCallback &closedcb) { _closed_callback = closedcb; }
     void SetAnyEventCallback(const AnyEventCallback &anyeventcb) { _anyevent_callback = anyeventcb; }
+    void SetSrvClosedCallback(const ClosedCallback &srvclosedcb) { _server_closed_callback = srvclosedcb; }
 
     void Established() { _loop->RunInLoop(std::bind(&Connection::EstablishedInLoop, this)); }
-    void Sent(char *data, size_t len) { _loop->RunInLoop(std::bind(&Connection::SendInLoop, this, data, len)); }
+    void Send(const char *data, size_t len) { 
+        Buffer buf;
+        buf.WriteAndPush(data, len);
+        _loop->RunInLoop(std::bind(&Connection::SendInLoop, this, std::move(buf))); 
+    }
     /* brief: 提供给组件使用者的关闭接口--并不实际关闭，需要判断有没有数据待处理 */
     void Shutdown() { _loop->RunInLoop(std::bind(&Connection::ShutdownInLoop, this)); }
     /* brief: 启动/关闭非活跃销毁，并定义非活跃时长，添加对应计时任务 */
@@ -69,34 +76,35 @@ private:
     /* brief: 描述符可读事件触发后调用的函数 */
     void HandleRead() {
         // step1.接收socket数据，放到缓冲区
+        //LOG_DEBUG << "create buf and NonBlockRecv";
         char buf[65536];
         ssize_t ret = _socket.NonBlockRecv(buf, 65535);
         if(ret < 0) {
             LOG_ERROR << "Handleread fail, shutdown connection";
             return ShutdownInLoop(); //先看一下有没有待发送的数据
         }
-        LOG_DEBUG << "data write into buffer";
+        //LOG_DEBUG << "data write into buffer";
         _in_buffer.WriteAndPush(buf, ret);
         // step2.调用message_callback进行业务处理
         if(_in_buffer.ReadAbleBytes() > 0) {
-            LOG_DEBUG << "run message_callback";
+            //LOG_DEBUG << "run message_callback";
             return _message_callback(shared_from_this(), &_in_buffer);
         }
     }
     /* brief: 描述符可写事件触发后调用的函数 */
     void HandleWrite() {
-        ssize_t ret = _socket.NonBlockSend(_out_buffer.ReadPos(), _out_buffer.ReadedBytes());
+        ssize_t ret = _socket.NonBlockSend(_out_buffer.ReadPos(), _out_buffer.ReadAbleBytes());
         if(ret < 0) {
             if(_in_buffer.ReadAbleBytes() > 0) {
-                LOG_DEBUG << "run message_callback";
+                //LOG_DEBUG << "run message_callback";
                 _message_callback(shared_from_this(), &_in_buffer); //如果发送数据出错了，就处理完待处理的任务后关闭连接
             }
-            return ReleaseInLoop(); //实际的关闭释放
+            return Release(); //实际的关闭释放
         }
         _out_buffer.MoveReadOffset(ret); //将读偏移向后移动
         if(_out_buffer.ReadAbleBytes() == 0) {
             _channel.DisableWrite(); //没有数据待发送就关闭可写事件监控    
-            if(_status == DISCONNECTING) return ReleaseInLoop(); //如果当前是连接待关闭状态，没有数据就直接关闭
+            if(_status == DISCONNECTING) return Release(); //如果当前是连接待关闭状态，没有数据就直接关闭
         }
 
         return;
@@ -104,13 +112,13 @@ private:
     /* brief: 描述符关闭事件触发后调用的函数 */
     void HandleClose() {
         if(_in_buffer.ReadAbleBytes() > 0) {
-            LOG_DEBUG << "run message_callback";
+            //LOG_DEBUG << "run message_callback";
             _message_callback(shared_from_this(), &_in_buffer); //触发文件描述符关闭事件，就把没处理的数据处理了
         }
-        return ReleaseInLoop();
+        return Release();
     }
     /* brief: 描述符错误事件触发后调用的函数 */
-    void HandleError() { return HandleError(); }
+    void HandleError() { return HandleClose(); }
     /* brief: 描述符任意事件触发后调用的函数 */
     void HandleEvent() {
         //step1. 刷新连接活跃度
@@ -126,6 +134,7 @@ private:
         //一旦启动读事件监控就有可能立即触发读事件，这时候如果启动了非活跃连接销毁就会出错
         //step2. 启动读事件监控
         _channel.EnableRead();
+        //LOG_DEBUG << "启动connection读事件监控";
         //step3. 调用回调函数
         if(_connected_callback) _connected_callback(shared_from_this());
     }
@@ -143,10 +152,13 @@ private:
         if(_closed_callback) _closed_callback(shared_from_this());
         if(_server_closed_callback) _server_closed_callback(shared_from_this()); //移除服务器内部管理的连接信息
     }
+    void Release() {
+        _loop->PushInLoop(std::bind(&Connection::ReleaseInLoop, this));
+    }
     /* brief: 将数据放到缓冲区，启动可写事件监控 */
-    void SendInLoop(char *data, size_t len) {
+    void SendInLoop(Buffer &buf) {
         if(_status == DISCONNECTED) return;
-        _out_buffer.WriteAndPush(data, len);
+        _out_buffer.WriteBufferAndPush(buf);
         if(_channel.WriteAble() == false) _channel.EnableWrite();
     }
     void ShutdownInLoop() {
@@ -158,14 +170,14 @@ private:
         if(_out_buffer.ReadAbleBytes() > 0) {
             if(_channel.WriteAble() == false) _channel.EnableWrite();
         }
-        if(_out_buffer.ReadAbleBytes() == 0) ReleaseInLoop();
+        if(_out_buffer.ReadAbleBytes() == 0) Release();
     }
     void EnableInactiveReleaseInLoop(int sec) {
         //step1. 将判断标识置为true
         _enable_inactive_release = true;
         //step2. 添加/刷新定时销毁任务
         if(_loop->HasTimer(_conn_id)) return _loop->RefreshTimer(_conn_id);
-        _loop->AddTimer(_conn_id, sec, std::bind(&Connection::ReleaseInLoop, this));
+        _loop->AddTimer(_conn_id, sec, std::bind(&Connection::Release, this));
     }
     void CancelInactiveReleaseInLoop() {
         _enable_inactive_release = false;
