@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>发现 - IceACG 社区</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="/css/discover.css">
+  <link rel="icon" href="/static/logo.png">
+</head>
+
+<body>
+
+  <!-- 顶部导航栏 -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a class="nav-left" href="/index.html">
+        <img src="/static/logo.png" class="logo">
+        <span class="site-title">IceACG 社区</span>
+      </a>
+
+      <div class="nav-right" id="login-area"></div>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- 热门话题 -->
+    <section class="section">
+      <h2 class="section-title">🔥 热门话题</h2>
+      <div id="topic-list" class="topic-list"></div>
+    </section>
+
+    <!-- 推荐帖子 -->
+    <section class="section">
+      <h2 class="section-title">✨ 精选推荐</h2>
+      <div id="recommend-list" class="recommend-list"></div>
+    </section>
+
+    <!-- 推荐创作者 -->
+    <section class="section">
+      <h2 class="section-title">🎨 推荐创作者</h2>
+      <div id="creator-list" class="creator-list"></div>
+    </section>
+
+  </main>
+
+  <script type="module" src="/js/discover.js"></script>
+</body>
+</html>

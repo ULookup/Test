@@ -1,0 +1,166 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #f5f8ff;
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+/* ========== 导航栏 ========== */
+.navbar {
+  background: white;
+  height: 62px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.nav-container {
+  max-width: 900px;
+  width: 100%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+.logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+.site-title {
+  font-size: 20px;
+  margin-left: 10px;
+  font-weight: 700;
+  color: #4AA3FF;
+}
+
+/* ========== 主体 ========== */
+.main {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 0 14px;
+}
+
+.section {
+  margin-bottom: 28px;
+}
+
+.section-title {
+  font-size: 22px;
+  color: #4AA3FF;
+  margin-bottom: 14px;
+}
+
+/* ========== 热门话题 Tags ========== */
+.topic-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.topic {
+  padding: 8px 14px;
+  background: white;
+  border-radius: 18px;
+  border: 1px solid #C7D5FF;
+  color: #3B82F6;
+  cursor: pointer;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.topic:hover {
+  background: #E8F1FF;
+}
+
+/* ========== 推荐帖子（卡片） ========== */
+.recommend-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.recommend-card {
+  background: white;
+  padding: 14px;
+  border-radius: 14px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  cursor: pointer;
+}
+.recommend-card:hover {
+  transform: translateY(-2px);
+  transition: 0.2s;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+.rec-title {
+  font-size: 17px;
+  font-weight: bold;
+  color: #333;
+}
+.rec-info {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #727E91;
+}
+.rec-tags {
+  margin-top: 8px;
+  display: flex;
+  gap: 6px;
+}
+.rec-tag {
+  padding: 3px 8px;
+  background: #E8F1FF;
+  color: #4A8CFF;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+/* ========== 创作者推荐 ========== */
+.creator-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.creator-card {
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 12px;
+  border-radius: 14px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.creator-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+.creator-info {
+  margin-left: 12px;
+}
+.creator-name {
+  font-size: 16px;
+  color: #4AA3FF;
+  font-weight: 700;
+}
+.creator-meta {
+  font-size: 13px;
+  color: #707A8A;
+}
+
+/* 小彩蛋文字 */
+.creator-easter {
+  font-size: 12px;
+  color: #999;
+  margin-left: auto;
+}

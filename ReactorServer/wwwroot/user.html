@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>用户主页 - IceACG</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" href="/static/logo.png">
+    <link rel="stylesheet" href="/css/user.css">
+</head>
+
+<body>
+
+<header class="navbar">
+    <div class="nav-container">
+        <a class="nav-left" href="/index.html">
+            <img src="/static/logo.png" class="logo">
+            <span class="site-title">IceACG 用户主页</span>
+        </a>
+
+        <div id="nav-right"></div>
+    </div>
+</header>
+
+<main class="main">
+
+    <!-- 左侧：用户信息卡片 -->
+    <aside class="sidebar" id="user-info"></aside>
+
+    <!-- 右侧：帖子列表 -->
+    <section class="content">
+        <h2 class="sec-title">Ta 的帖子</h2>
+        <div id="post-list" class="post-list"></div>
+
+        <div id="load-more" class="load-more">加载中...</div>
+    </section>
+
+</main>
+
+<script type="module" src="/js/user.js"></script>
+
+</body>
+</html>

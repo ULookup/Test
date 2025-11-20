@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>账号中心 - IceACG</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" href="/static/logo.png">
+    <link rel="stylesheet" href="/css/account.css">
+</head>
+
+<body>
+
+<header class="navbar">
+    <div class="nav-container">
+        <a class="nav-left" href="/index.html">
+            <img src="/static/logo.png" class="logo">
+            <span class="site-title">IceACG 账号中心</span>
+        </a>
+
+        <div id="nav-right"></div>
+    </div>
+</header>
+
+<main class="main">
+
+    <!-- 左侧导航 -->
+    <aside class="sidebar">
+        <div class="side-item active" data-tab="profile">个人资料</div>
+        <div class="side-item" data-tab="security">账号安全</div>
+        <div class="side-item" data-tab="logout">退出登录</div>
+    </aside>
+
+    <!-- 右侧内容 -->
+    <section class="content">
+
+        <!-- 个人资料 -->
+        <div id="tab-profile" class="tab-panel">
+
+            <h2 class="sec-title">个人资料</h2>
+
+            <div class="avatar-box">
+                <img id="avatar" class="avatar" src="/static/logo.png">
+                <button id="change-avatar-btn" class="btn-blue">修改头像</button>
+                <input type="file" id="avatar-input" accept="image/*" style="display:none;">
+            </div>
+
+            <div class="form-item">
+                <label>昵称</label>
+                <input id="nickname" class="input">
+            </div>
+
+            <div class="form-item">
+                <label>签名</label>
+                <textarea id="signature" class="textarea" placeholder="介绍一下自己吧~"></textarea>
+            </div>
+
+            <button id="save-profile-btn" class="btn-primary">保存资料</button>
+
+        </div>
+
+        <!-- 账号安全 -->
+        <div id="tab-security" class="tab-panel" style="display:none;">
+
+            <h2 class="sec-title">账号安全</h2>
+
+            <div class="form-item">
+                <label>旧密码</label>
+                <input id="old-pwd" type="password" class="input">
+            </div>
+
+            <div class="form-item">
+                <label>新密码</label>
+                <input id="new-pwd" type="password" class="input">
+            </div>
+
+            <button id="change-pwd-btn" class="btn-primary">修改密码</button>
+
+        </div>
+
+        <!-- 退出登录 -->
+        <div id="tab-logout" class="tab-panel" style="display:none;">
+
+            <h2 class="sec-title">退出账号</h2>
+            <button id="logout-btn" class="btn-danger">退出登录</button>
+
+        </div>
+
+    </section>
+
+</main>
+
+<script type="module" src="/js/account.js"></script>
+
+</body>
+</html>

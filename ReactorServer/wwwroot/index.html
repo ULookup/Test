@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>IceACG - 二次元社区</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" href="/static/logo.png">
+    <link rel="stylesheet" href="/css/index.css">
+</head>
+
+<body>
+
+<header class="navbar">
+    <div class="nav-container">
+        <div class="nav-left">
+            <img src="/static/logo.png" class="logo">
+            <span class="site-title">IceACG</span>
+        </div>
+
+        <div class="search-box">
+            <input id="search-input" placeholder="搜索帖子 / 用户">
+            <button id="search-btn">🔍</button>
+        </div>
+
+        <div class="nav-right" id="nav-right"></div>
+    </div>
+</header>
+
+<main class="main">
+
+    <!-- 左侧帖子流 -->
+    <section class="left">
+        <div id="post-list" class="post-list"></div>
+        <div id="load-more" class="load-more">加载中...</div>
+    </section>
+
+    <!-- 右侧推荐区 -->
+    <aside class="right">
+
+        <div class="side-card">
+            <h3>热门话题</h3>
+            <div id="hot-topics"></div>
+        </div>
+
+        <div class="side-card">
+            <h3>推荐帖子</h3>
+            <div id="recommend-posts"></div>
+        </div>
+
+        <div class="side-card">
+            <h3>推荐创作者</h3>
+            <div id="recommend-creators"></div>
+        </div>
+
+    </aside>
+
+</main>
+
+<script type="module" src="/js/index.js"></script>
+
+</body>
+</html>

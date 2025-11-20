@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>搜索 - IceACG 社区</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" href="/static/logo.png">
+    <link rel="stylesheet" href="/css/search.css">
+</head>
+
+<body>
+
+<!-- 顶部导航栏 -->
+<header class="navbar">
+    <div class="nav-container">
+        <a class="nav-left" href="/index.html">
+            <img src="/static/logo.png" class="logo">
+            <span class="site-title">IceACG 社区</span>
+        </a>
+
+        <div class="search-box">
+            <input id="search-input" placeholder="搜索帖子 / 用户">
+            <button id="search-btn">🔍</button>
+        </div>
+
+        <div id="nav-right"></div>
+    </div>
+</header>
+
+<!-- 主体布局 -->
+<main class="main">
+
+    <div class="left">
+        <h2 class="sec-title">帖子</h2>
+        <div id="post-results" class="post-list"></div>
+    </div>
+
+    <aside class="right">
+        <h2 class="sec-title">用户</h2>
+        <div id="user-results" class="user-list"></div>
+    </aside>
+
+</main>
+
+<script type="module" src="/js/search.js"></script>
+
+</body>
+</html>

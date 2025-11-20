@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>帖子详情 - IceACG</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" href="/static/logo.png">
+    <link rel="stylesheet" href="/css/post.css">
+</head>
+
+<body>
+
+<header class="navbar">
+    <div class="nav-container">
+
+        <a class="nav-left" href="/index.html">
+            <img src="/static/logo.png" class="logo">
+            <span class="site-title">IceACG 帖子</span>
+        </a>
+
+        <div id="nav-right"></div>
+
+    </div>
+</header>
+
+<main class="main">
+
+    <section id="post-box" class="post-box"></section>
+
+    <section class="comment-section">
+        <h2 class="comment-title">评论区</h2>
+
+        <div class="comment-editor">
+            <textarea id="comment-input" placeholder="写点什么吧~"></textarea>
+            <button id="comment-btn" class="btn-primary">发表评论</button>
+        </div>
+
+        <div id="comment-list" class="comment-list"></div>
+    </section>
+
+</main>
+
+<script type="module" src="/js/post.js"></script>
+</body>
+</html>

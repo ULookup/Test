@@ -1,0 +1,101 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #f5f8ff;
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+/* 顶部 */
+.navbar {
+  background: white;
+  height: 65px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  display: flex;
+  position: sticky;
+  top: 0;
+}
+.nav-container {
+  max-width: 900px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.logo {
+  width: 40px; height: 40px; border-radius: 50%;
+}
+.site-title {
+  font-size: 20px;
+  color: #4AA3FF;
+  font-weight: 700;
+  margin-left: 10px;
+}
+.nav-left {
+  display: flex;
+  align-items: center;
+}
+
+/* 主体 */
+.main {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 0 16px;
+}
+
+.title {
+  font-size: 22px;
+  color: #4AA3FF;
+  margin-bottom: 16px;
+}
+
+/* 通知卡片 */
+.notif-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.notif-card {
+  background: white;
+  padding: 16px;
+  border-radius: 14px;
+  display: flex;
+  gap: 14px;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.notif-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+.notif-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+}
+.notif-body {
+  flex: 1;
+}
+.notif-user {
+  font-size: 15px;
+  font-weight: 600;
+  color: #4AA3FF;
+}
+.notif-text {
+  font-size: 14px;
+  margin-top: 4px;
+  color: #4c576c;
+}
+.notif-time {
+  font-size: 12px;
+  margin-top: 6px;
+  color: #8a94a6;
+}
+
+.unread-dot {
+  width: 10px;
+  height: 10px;
+  background: #ff5e8e;
+  border-radius: 50%;
+  margin-top: 10px;
+}

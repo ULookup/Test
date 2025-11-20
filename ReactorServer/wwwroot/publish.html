@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>发布帖子 - IceACG 社区</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="icon" href="/static/logo.png">
+  <link rel="stylesheet" href="/css/publish.css">
+</head>
+
+<body>
+
+<header class="navbar">
+    <div class="nav-container">
+
+        <a class="nav-left" href="/index.html">
+            <img src="/static/logo.png" class="logo">
+            <span class="site-title">IceACG 社区</span>
+        </a>
+
+        <div id="nav-right"></div>
+
+    </div>
+</header>
+
+<main class="main">
+
+  <div class="post-card">
+
+      <h2 class="title">发布新帖</h2>
+
+      <!-- 标题 -->
+      <input id="post-title" class="input-title" placeholder="请输入标题（必填）">
+
+      <!-- 内容 -->
+      <textarea id="post-content" class="input-content" placeholder="请输入正文内容"></textarea>
+
+      <!-- 标签 -->
+      <div class="tags-box">
+        <input id="tag-input" class="tag-input" placeholder="输入标签并回车添加">
+        <div id="tag-list" class="tag-list"></div>
+      </div>
+
+      <!-- 图片上传 -->
+      <h3 class="sec-title">上传图片</h3>
+      <div class="img-box" id="img-box"></div>
+      <input type="file" id="img-input" accept="image/*" multiple style="display:none;">
+      <button id="add-img-btn" class="btn-blue">选择图片</button>
+
+      <!-- 提交按钮 -->
+      <button id="submit-btn" class="btn-primary">发布帖子</button>
+
+  </div>
+
+</main>
+
+<script type="module" src="/js/publish.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,86 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #f5f8ff, #e7f0ff);
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+/* 居中容器 */
+.login-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 卡片 */
+.login-card {
+    width: 330px;
+    padding: 26px;
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+.title {
+    margin-top: 10px;
+    font-size: 22px;
+    color: #4AA3FF;
+    font-weight: 700;
+}
+
+.subtitle {
+    margin-top: 4px;
+    color: #6b7a99;
+    font-size: 14px;
+}
+
+/* 输入框 */
+.input {
+    width: 100%;
+    margin-top: 16px;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #dfe7ff;
+    font-size: 14px;
+}
+.input:focus {
+    outline: none;
+    border-color: #4AA3FF;
+}
+
+/* 登录按钮 */
+.btn-primary {
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    background: #4AA3FF;
+    color: white;
+    font-size: 15px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+}
+.btn-primary:hover {
+    background: #3a93f5;
+}
+
+/* 注册链接 */
+.bottom-links {
+    margin-top: 18px;
+    font-size: 14px;
+}
+.bottom-links a {
+    color: #4AA3FF;
+    text-decoration: none;
+}
+.bottom-links a:hover {
+    text-decoration: underline;
+}

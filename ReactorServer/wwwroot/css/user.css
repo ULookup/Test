@@ -1,0 +1,162 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #f5f8ff;
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+/* 顶栏 */
+.navbar {
+  background: white;
+  height: 65px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  position: sticky;
+  top: 0;
+  display: flex;
+}
+.nav-container {
+  max-width: 1100px;
+  width: 100%;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+}
+.site-title {
+  font-size: 20px;
+  color: #4AA3FF;
+  font-weight: 700;
+  margin-left: 10px;
+}
+.nav-left {
+  display: flex;
+  align-items: center;
+}
+
+/* 主体布局 */
+.main {
+  max-width: 1100px;
+  margin: 20px auto;
+  padding: 0 16px;
+  display: flex;
+  gap: 20px;
+}
+
+/* 左侧用户信息 */
+.sidebar {
+  width: 260px;
+  background: white;
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+
+.avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 16px;
+  object-fit: cover;
+}
+
+.nickname {
+  font-size: 20px;
+  font-weight: 700;
+  color: #4AA3FF;
+  margin-top: 10px;
+}
+
+.signature {
+  font-size: 14px;
+  color: #4c576c;
+  margin-top: 6px;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 18px;
+}
+.stat {
+  text-align: center;
+}
+.stat-num {
+  font-size: 18px;
+  color: #4AA3FF;
+  font-weight: 700;
+}
+.stat-title {
+  font-size: 12px;
+  color: #75819e;
+}
+
+/* 关注按钮 */
+.btn-follow {
+  width: 100%;
+  margin-top: 16px;
+  padding: 10px;
+  background: #4AA3FF;
+  border: none;
+  color: white;
+  border-radius: 12px;
+  cursor: pointer;
+}
+.btn-unfollow {
+  width: 100%;
+  margin-top: 16px;
+  padding: 10px;
+  background: #ff6b81;
+  border: none;
+  color: white;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+/* 右侧帖子区 */
+.content {
+  flex: 1;
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+
+.sec-title {
+  font-size: 20px;
+  color: #4AA3FF;
+  margin-bottom: 16px;
+}
+
+/* 帖子卡片（与首页统一） */
+.post-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.post-card {
+  background: white;
+  padding: 16px;
+  border-radius: 14px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  cursor: pointer;
+}
+.post-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+.post-content {
+  font-size: 14px;
+  color: #4c576c;
+  margin-top: 6px;
+}
+.load-more {
+  text-align: center;
+  padding: 14px;
+  color: #75819e;
+  margin-top: 10px;
+}
