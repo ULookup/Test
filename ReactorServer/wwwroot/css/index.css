@@ -1,242 +1,849 @@
+/*************************************************
+ * IceACG 首页 — 完全漫画化（分镜主题）
+ * 适配 index.html / index.js / navbar.css
+ *************************************************/
+
+:root {
+    --line-black: #000;
+    --panel-bg: #ffffff;
+    --paper-bg: #fafafa;
+    --dot: radial-gradient(circle, rgba(0,0,0,0.12) 2px, transparent 2px) 0 0/12px 12px;
+    --shadow-line: 0px 4px 0px #000;
+    --radius: 18px;
+
+    /* 高饱和二次元色 */
+    --manga-blue: #3c7dff;
+    --manga-pink: #ff4ea0;
+    --manga-yellow: #ffd94c;
+}
+
+
+/*************************************************
+ *  1. 全局分镜背景
+ *************************************************/
+
 body {
-  margin: 0;
-  padding: 0;
-  background: #f5f8ff;
-  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--paper-bg);
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    position: relative;
 }
 
-/* ===== 顶部导航栏 ===== */
-.navbar {
-  background: white;
-  height: 65px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  display: flex;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 10;
+/* 左右两侧分镜粗线 */
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    width: 12px;
+    height: 100vh;
+    background: #000;
+    z-index: 1;
 }
-.nav-container {
-  max-width: 1100px;
-  width: 100%;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.nav-left {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-}
-.logo {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-}
-.site-title {
-  font-size: 20px;
-  color: #4AA3FF;
-  margin-left: 10px;
-  font-weight: 700;
+body::before { left: 0; }
+body::after  { right: 0; }
+
+/*************************************************
+ *  2. 顶部 Banner — 漫画封面页风格
+ *************************************************/
+
+.index-banner {
+    height: 260px;
+    background: #fff;
+    border-bottom: 4px solid #000;
+
+    position: relative;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;     /* 居中对齐 */
+    text-align: center;
+
+    padding: 0 20px;
 }
 
-/* ===== 搜索框 ===== */
-.search-box {
-  display: flex;
-  align-items: center;
-  background: #e7f0ff;
-  padding: 6px 10px;
-  border-radius: 20px;
-  gap: 6px;
-}
-.search-box input {
-  border: none;
-  background: transparent;
-  outline: none;
-  font-size: 14px;
-  width: 200px;
-}
-.search-box button {
-  background: #4AA3FF;
-  color: white;
-  border: none;
-  padding: 6px 8px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-.search-box button:hover {
-  background: #3a93f5;
+/* 大型分镜外框 */
+.index-banner::before {
+    content: "";
+    position: absolute;
+    inset: 24px 40px;        /* 控制边距（可调） */
+    border: 4px solid #000;
+    border-radius: 12px;     /* 圆角分镜，更柔和 */
+
+    box-shadow: -6px 6px 0 #000;   /* 立体漫画感 */
 }
 
-/* ===== 主布局 ===== */
-.main {
-  max-width: 1100px;
-  margin: 20px auto;
-  display: flex;
-  gap: 20px;
-  padding: 0 15px;
+
+
+/* 速度线 */
+.index-banner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: repeating-linear-gradient(
+        115deg,                 /* 倾斜角度，充满动感 */
+        transparent,
+        transparent 14px,
+        rgba(0,0,0,0.07) 15px,
+        rgba(0,0,0,0.07) 16px
+    );
+
+    opacity: 0.55;
 }
 
-/* ===== 左侧帖子 ===== */
-.content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+
+.banner-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 60px;
 }
 
-/* 帖子卡片 */
-.post-card {
-  background: white;
-  border-radius: 16px;
-  padding: 16px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-  cursor: pointer;
-}
-.post-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+.banner-title {
+    font-size: 56px;               
+    font-weight: 900;
+    color: #000;
+    letter-spacing: 4px;
+    text-align: center;
+
+    /* --- 手绘漫画标题效果 --- */
+    font-family: "Comic Sans MS", "Yuji Syuku", "DFKai-SB", sans-serif;
+    transform: rotate(-1.5deg);                  /* 微倾斜，手写感 */
+    text-shadow:
+        -6px 6px 0 #ffffff,                         /* 粗描边（手绘晕开） */
+        -2px 2px 0 #ffffff,
+         2px 2px 0 #ffffff,
+        -3px -3px 0 #ffffff,
+         4px -4px 0 #ffffff,
+        rgba(0,0,0,0.15) 0px 20px 18px;          /* 漫画标题下暗影 */
+
+    padding: 0 20px;
+    margin-top: 12px;
+    margin-bottom: 14px;
+
+    /* 模拟手写笔触不均匀（轻微波动动画） */
+    animation: handdraw-wiggle 2.4s ease-in-out infinite;
 }
 
-.post-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
+@keyframes handdraw-wiggle {
+    0% { transform: rotate(-1.5deg) scale(1); }
+    40% { transform: rotate(-1.2deg) scale(1.01); }
+    60% { transform: rotate(-1.6deg) scale(0.99); }
+    100% { transform: rotate(-1.5deg) scale(1); }
 }
 
-.post-sub {
-  display: flex;
-  align-items: center;
-  margin-top: 8px;
-  gap: 8px;
-}
-.author-avatar {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: #eaeaea;
-}
-.author-name {
-  color: #4AA3FF;
-  font-size: 14px;
-}
-.post-time {
-  color: #8a94a6;
-  font-size: 12px;
+.banner-sub {
+    font-size: 20px;
+    font-weight: 600;
+    color: #444;
+
+    /* ⭐ 轻微描边，让副标题也更有漫画感 */
+    text-shadow: -2px 2px 0 #d1d1d1;
 }
 
-.post-content {
-  margin-top: 10px;
-  font-size: 14px;
-  color: #4c576c;
-  line-height: 1.5;
+
+
+/*************************************************
+ *  3. 主体分镜布局
+ *************************************************/
+
+.page-container {
+    display: grid;
+    grid-template-columns: 1fr 320px;  /* 左侧填满，右侧固定 */
+    gap: 32px;
+
+    width: 1200px;
+    margin: 40px auto;
 }
 
-/* 封面图 */
-.post-cover {
-  width: 100%;
-  height: 180px;
-  margin-top: 12px;
-  border-radius: 14px;
-  object-fit: cover;
+
+
+/*************************************************
+ *  4. 左侧动态流（分镜卡片）
+ *************************************************/
+/*************************************************
+ * 三列卡牌网格布局（类似 Pixiv / B站）
+ *************************************************/
+
+.post-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    margin-top: 20px;
 }
 
-/* 标签 */
-.tags {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-}
-.tag {
-  background: #e7f1ff;
-  color: #4AA3FF;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 12px;
+
+/* --------------------
+   漫画分镜卡片
+--------------------- */
+
+.manga-card {
+    height: 420px;    
+    background: #fff;
+    border: 3px solid #000;
+    border-radius: 18px;
+
+    overflow: visible !important;
+    position: relative;      /* 让拟声词定位基于卡片 */
+
+    cursor: pointer;
+    box-shadow: -6px 6px 0px #000;
+    transition: 0.25s ease;
+
+    display: flex;           /* 保留 flex-column，但不设 height */
+    flex-direction: column;
 }
 
-/* 点赞收藏评论区域 */
-.post-actions {
-  margin-top: 12px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  font-size: 14px;
-  color: #6b7a99;
-}
-.action-btn {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  cursor: pointer;
-}
-.action-btn:hover {
-  color: #4AA3FF;
+
+.manga-card:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: -10px 10px 0px #000;
 }
 
-/* ===== 无限滚动 ===== */
-.load-more {
-  text-align: center;
-  margin-top: 20px;
-  color: #6b7a99;
-}
-.spinner {
-  width: 18px;
-  height: 18px;
-  border: 3px solid #c9d6ff;
-  border-top-color: #4AA3FF;
-  border-radius: 50%;
-  margin: auto;
-  animation: spin 0.6s linear infinite;
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
+
+/* 封面图（分镜顶部） */
+.manga-cover {
+    width: 100%;
+    height: 240px;        /* 固定高度，和 cover-box 完全一致 */
+    object-fit: cover;
+    display: block;
 }
 
-/* ===== 右侧推荐区 ===== */
+
+.manga-info {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    overflow: hidden;
+}
+
+.manga-title {
+    font-size: 16px;
+    font-weight: 900;
+    margin-bottom: 6px;
+}
+
+.manga-content {
+    flex: 1;
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; 
+    -webkit-box-orient: vertical;
+}
+
+.manga-bottom {
+    margin-top: auto;
+    padding-top: 10px;
+}
+
+
+/* SFX 拟声词 */
+.fx-sound {
+    position: absolute;
+    right: 12px;
+    top: -12px;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--manga-yellow);
+    text-shadow: -3px 3px #000;
+    transform: rotate(6deg);
+    opacity: 0.65;
+}
+
+/* 作者信息（漫画头像） */
+.manga-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.manga-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+
+    border: 3px solid #000;
+    object-fit: cover;
+    background: #fff;
+}
+
+.manga-author-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+}
+
+.manga-author-name {
+    font-size: 15px;
+    font-weight: 900;
+}
+
+.manga-time {
+    font-size: 12px;
+    color: #666;
+}
+
+/* 标题 */
+.manga-title {
+    font-size: 22px;
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+
+/* 摘要 */
+.manga-content {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #444;
+    margin-bottom: 18px;
+}
+
+/* 底部按钮 */
+.manga-bottom {
+    display: flex;
+    gap: 20px;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+
+
+/*************************************************
+ *  5. 骨架屏（漫画块空白）
+ *************************************************/
+
+.post-skeleton {
+    border: 3px solid #000;
+    background: repeating-linear-gradient(
+        -45deg,
+        #eaeaea,
+        #eaeaea 6px,
+        #f3f3f3 6px,
+        #f3f3f3 12px
+    );
+    border-radius: var(--radius);
+    height: 130px;
+
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+.post-skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.5),
+        transparent
+    );
+    animation: sk-move 1.2s infinite;
+}
+
+@keyframes sk-move {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+
+
+/*************************************************
+ *  6. 空状态
+ *************************************************/
+
+.empty-box {
+    text-align: center;
+    padding: 40px 0;
+}
+
+.empty-img {
+    width: 180px;
+    opacity: 0.8;
+}
+
+.btn-post {
+    display: inline-block;
+    padding: 10px 20px;
+
+    border: 3px solid #000;
+    border-radius: 12px;
+
+    background: var(--manga-blue);
+    color: #fff;
+
+    font-size: 16px;
+    font-weight: 900;
+
+    box-shadow: -4px 4px #000;
+}
+
+
+
+/*************************************************
+ *  7. 右侧 Sidebar（分镜块）
+ *************************************************/
+
 .sidebar {
-  width: 260px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-.side-card {
-  background: white;
-  padding: 16px;
-  border-radius: 14px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
-.side-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #4AA3FF;
-  margin-bottom: 12px;
-}
-.side-item {
-  margin-bottom: 10px;
-  color: #4c576c;
-  font-size: 14px;
-  cursor: pointer;
-}
-.side-item:hover {
-  color: #4AA3FF;
+    width: 320px;
+    flex-shrink: 0;
 }
 
-/* 推荐创作者 */
-.creator {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
+.side-card {
+    border: 3px solid #000;
+    border-radius: var(--radius);
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+
+    box-shadow: -6px 6px 0px #000;
 }
-.creator-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+
+.side-card-title {
+    font-size: 18px;
+    font-weight: 900;
+    margin-bottom: 14px;
 }
-.creator-name {
-  font-size: 14px;
-  color: #4AA3FF;
+
+/* 热门话题 */
+.topic-item {
+    padding: 10px;
+    border: 2px solid #000;
+    border-radius: 10px;
+    background: #fefefe;
+    margin-bottom: 10px;
+    cursor: pointer;
+
+    transition: 0.25s;
+}
+
+.topic-item:hover {
+    transform: translateX(4px);
+    background: #fff3f9;
+}
+
+/* 创作者 */
+.creator-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    padding: 10px;
+    border: 2px solid #000;
+    border-radius: 10px;
+    margin-bottom: 10px;
+
+    background: #fefefe;
+    cursor: pointer;
+
+    transition: 0.25s;
+}
+
+.creator-item:hover {
+    transform: translateX(4px);
+    background: #eef4ff;
+}
+
+.creator-item img {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    border: 2px solid #000;
+    object-fit: cover;
+}
+
+
+
+/*************************************************
+ *  8. 悬浮发帖按钮（漫画按钮）
+ *************************************************/
+
+.fab-post {
+    position: fixed;
+    right: 32px;
+    bottom: 32px;
+
+    width: 66px;
+    height: 66px;
+
+    border-radius: 50%;
+    border: 3px solid #000;
+    background: var(--manga-pink);
+
+    font-size: 36px;
+    font-weight: 900;
+    color: #fff;
+
+    box-shadow: -6px 6px 0px #000;
+
+    text-align: center;
+    line-height: 62px;
+    cursor: pointer;
+
+    transition: 0.25s;
+    z-index: 999;
+}
+
+.fab-post:hover {
+    transform: translate(-4px, -4px) rotate(-6deg);
+}
+
+
+
+/*************************************************
+ *  9. 速度线层（与 index.js 联动）
+ *************************************************/
+
+#speedlines {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 18px,
+        rgba(0,0,0,0.08) 19px
+    );
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 0;
+}
+
+/* ============================
+   📘 终章提示（漫画风格收尾面板）
+   ============================ */
+
+.load-more {
+    text-align: center;
+    margin: 40px 0;
+    font-size: 20px;
+    font-weight: 900;
+    color: #000;
+
+    /* 漫画对话框样式 */
+    display: inline-block;
+    padding: 22px 34px;
+
+    background: #fff;
+    border: 4px solid #000;
+    border-radius: 16px;
+
+    box-shadow: -6px 6px 0 #000;
+
+    position: relative;
+    cursor: default;
+}
+
+/* 终章拟声词 */
+.load-more::after {
+    content: "ドンッ!";
+    position: absolute;
+    right: -40px;
+    top: -28px;
+
+    font-size: 28px;
+    font-weight: 900;
+
+    color: var(--manga-yellow);
+    text-shadow: -3px 3px #000;
+    transform: rotate(8deg);
+    opacity: 0.75;
+
+    pointer-events: none;
+}
+
+/* 入场动画 */
+.load-more.show {
+    animation: loadmore-pop 0.45s cubic-bezier(.33,1.4,.52,1.1);
+}
+
+@keyframes loadmore-pop {
+    0%   { transform: scale(0.6) translateY(20px); opacity: 0; }
+    80%  { transform: scale(1.05) translateY(0); opacity: 1; }
+    100% { transform: scale(1); }
+}
+
+/* =======================
+   📘 首页装饰背景（不会挡内容）
+   ======================= */
+
+.page-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;          /* ⭐ 最关键：永远在所有内容下 */
+    pointer-events: none; /* ⭐ 不挡交互 */
+    opacity: 0.12;        /* ⭐ 控制背景存在感 */
+}
+
+.page-bg .bg-piece {
+    position: absolute;
+    width: 480px;
+    filter: grayscale(1) contrast(1.1);
+    opacity: 0.18;
+    user-select: none;
+    pointer-events: none;
+}
+
+/* 你可以自由调整位置和角度 */
+.page-bg .bg1 {
+    top: 180px;
+    left: 40px;
+    transform: rotate(-4deg);
+}
+
+.page-bg .bg2 {
+    top: 760px;
+    right: 60px;
+    transform: rotate(6deg);
+}
+
+.page-bg .bg3 {
+    bottom: 160px;
+    left: 120px;
+    transform: rotate(3deg);
+}
+
+/* ============================
+   A. 随机拟声词飞入特效
+=============================== */
+.floating-sfx {
+    position: fixed;
+    z-index: 10;
+    font-size: 38px;
+    font-weight: 900;
+    color: #ffd94c;
+    text-shadow: -4px 4px #000, -2px 2px #000;
+    opacity: 0;
+    transform: translateX(0) scale(0.9);
+    transition: all 0.6s cubic-bezier(.33,1.4,.52,1.1);
+    user-select: none;
+}
+
+.floating-sfx.show {
+    opacity: 0.9;
+    transform: translateX(120px) scale(1.1);
+}
+
+.floating-sfx::after {
+    /* 轻微震动 */
+    animation: sfx-wiggle 0.2s infinite alternate;
+}
+
+@keyframes sfx-wiggle {
+    0% { transform: translate(0,0); }
+    100% { transform: translate(2px,-2px); }
+}
+
+
+/* ============================
+   B. 鼠标速度线拖尾
+=============================== */
+#mouse-trail {
+    mix-blend-mode: multiply; /* 保留漫画风黑色线条感 */
+}
+
+/* ============================
+   D. 卡片 Hover 动画
+=============================== */
+
+.card-shake {
+    animation: cardShake 0.25s cubic-bezier(.33,1.4,.52,1.1);
+}
+
+@keyframes cardShake {
+    0% { transform: translate(-3px, -3px) rotate(-1deg); }
+    50% { transform: translate(3px, 2px) rotate(1deg); }
+    100% { transform: translate(0, 0) rotate(0); }
+}
+
+/* 小拟声词喷出 */
+.mini-sfx-burst {
+    position: absolute;
+    right: 16px;
+    top: 12px;
+
+    z-index: 999;         /* 保证永远在封面之上 */
+    pointer-events: none;
+
+
+    font-size: 22px;
+    font-weight: 900;
+    color: #ffd94c;
+    text-shadow: -3px 3px #000;
+
+    opacity: 0;
+    transform: scale(0.6) translateY(-10px) rotate(-6deg);
+
+    animation: miniSFX 0.5s forwards cubic-bezier(.33,1.4,.52,1.1);
+}
+
+@keyframes miniSFX {
+    0% {
+        opacity: 0;
+        transform: scale(0.6) translateY(-10px) rotate(-6deg);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.0) translateY(-26px) rotate(3deg);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.1) translateY(-36px) rotate(-3deg);
+    }
+}
+
+.manga-cover-box {
+    width: 100%;
+    height: 240px;        /* ⭐ 固定高度（关键） */
+    overflow: hidden;     /* ⭐ 裁剪生效 */
+    border-bottom: 3px solid #000;
+    position: relative;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    overflow: hidden;
+}
+
+.like-burst {
+    position: absolute;
+    pointer-events: none;
+    font-size: 20px;
+    color: #ff4ea0;
+    animation: burst 0.45s forwards;
+}
+@keyframes burst {
+    0% { transform: scale(0.2); opacity: 1; }
+    100% { transform: scale(2.0); opacity: 0; }
+}
+
+/* 推荐创作者用户名 — 漫画手绘风字体 */
+.creator-item .creator-info span:first-child {
+    font-family: "Comic Sans MS", "Yuji Syuku", "DFKai-SB", "Hannotate SC", sans-serif;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    font-size: 15px;
+
+    /* 微微倾斜，让字体更有手绘感 */
+    transform: rotate(-1deg);
+    display: inline-block; /* 允许 transform 生效 */
+}
+/* 推荐创作者用户名（主文字） */
+.creator-item .creator-info span:first-child {
+    font-family: "Comic Sans MS", "Yuji Syuku", "DFKai-SB", "Hannotate SC", sans-serif;
+    font-weight: 900;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+
+    transform: rotate(-1deg);
+    display: inline-block;
+}
+
+/* 推荐创作者 — 粉丝数量（副文字，轻漫画风） */
+.creator-item .creator-info span:last-child {
+    font-family: "Yuji Syuku", "Comic Sans MS", "DFKai-SB", sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #666;
+
+    letter-spacing: 0.3px;
+    transform: rotate(-0.5deg);
+    display: inline-block;
+}
+/* ================================
+   首页 Tab 切换（推荐｜关注）
+   ================================ */
+
+.tabs {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.tab {
+    padding: 6px 18px;
+    font-size: 20px;
+    font-weight: 900;
+
+    border: 3px solid #000;
+    border-radius: 12px;
+
+    background: #fff;
+    cursor: pointer;
+
+    box-shadow: -4px 4px 0 #000;
+    transition: 0.2s;
+}
+
+.tab:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: -6px 6px 0 #000;
+}
+
+.tab-active {
+    background: #ffd94c;
+}
+/* ============================================
+   优化后的 空状态排版（推荐 / 关注统一）
+   ============================================ */
+
+.empty-box {
+    margin-top: 40px;
+    padding: 40px 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+/* 空状态图更漫画一些，稍微大一点 */
+.empty-img {
+    width: 220px;
+    height: auto;
+    margin-bottom: 16px;
+
+    opacity: 0.95;
+    image-rendering: -webkit-optimize-contrast;
+}
+
+/* 空状态文字 */
+.empty-box p {
+    font-size: 18px;
+    font-weight: 900;
+    margin: 10px 0 20px 0;
+
+    color: #222;
+    letter-spacing: 0.5px;
+
+    text-shadow: -2px 2px 0 #fff;
+}
+
+/* 按钮保持漫画风 */
+.empty-box .btn-post {
+    padding: 12px 24px;
+    border: 3px solid #000;
+    border-radius: 14px;
+    background: var(--manga-pink);
+    color: #fff;
+    font-weight: 900;
+    font-size: 16px;
+    box-shadow: -4px 4px 0 #000;
+    transition: .2s;
+}
+.empty-box .btn-post:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: -6px 6px 0 #000;
 }

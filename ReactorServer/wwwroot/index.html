@@ -1,63 +1,105 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
-    <title>IceACG - 二次元社区</title>
+    <title>IceACG - 首页</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="icon" href="/static/logo.png">
+    <!-- 全局样式 -->
+    <link rel="stylesheet" href="/css/vars.css">
+    <link rel="stylesheet" href="/css/base.css">
+
+    <!-- 分镜漫画风样式 -->
+    <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/index.css">
+
+    <!-- 导航栏逻辑 -->
+    <script type="module" src="/js/core/navbar.js"></script>
 </head>
 
 <body>
 
+<!-- 顶部分镜粗线条由 body::before/after 在 CSS 中生成 -->
+
+<!-- ===================== 顶部导航栏 ===================== -->
 <header class="navbar">
     <div class="nav-container">
-        <div class="nav-left">
-            <img src="/static/logo.png" class="logo">
-            <span class="site-title">IceACG</span>
+
+        <a class="nav-left" href="/index.html">
+            <img id="nav-logo" class="nav-logo" src="">
+            <span class="nav-title">IceACG</span>
+        </a>
+
+        <div class="nav-search">
+            <input id="nav-search-input" placeholder="搜索帖子 / 用户">
+            <button id="nav-search-btn" class="nav-search-btn">🔍</button>
         </div>
 
-        <div class="search-box">
-            <input id="search-input" placeholder="搜索帖子 / 用户">
-            <button id="search-btn">🔍</button>
-        </div>
-
-        <div class="nav-right" id="nav-right"></div>
+        <div id="nav-right" class="nav-right"></div>
     </div>
 </header>
 
-<main class="main">
 
-    <!-- 左侧帖子流 -->
-    <section class="left">
-        <div id="post-list" class="post-list"></div>
-        <div id="load-more" class="load-more">加载中...</div>
+
+<!-- ===================== 顶部封面 Banner（漫画封面页风格） ===================== -->
+<section class="index-banner">
+    <div class="banner-content">
+        <h1 class="banner-title">欢迎来到 IcePop 的妙妙屋</h1>
+        <p class="banner-sub">探索老冰棍的妙妙屋</p>
+    </div>
+</section>
+
+
+
+
+<!-- ===================== 主体分镜区域 ===================== -->
+<main class="page-container">
+
+    <!-- 左侧推荐动态流（漫画分镜卡片） -->
+    <section class="feed">
+
+        <div class="feed-header tabs">
+            <span id="tab-recommend" class="tab tab-active">推荐</span>
+            <span id="tab-follow" class="tab">关注</span>
+        </div>
+
+
+        <div id="post-list" class="post-grid"></div>
+
+        <div id="load-more" class="load-more"></div>
     </section>
 
-    <!-- 右侧推荐区 -->
-    <aside class="right">
 
+
+    <!-- 右侧 Sidebar（热门话题 + 创作者） -->
+    <aside class="sidebar">
+
+        <!-- 热门话题 -->
         <div class="side-card">
-            <h3>热门话题</h3>
-            <div id="hot-topics"></div>
+            <div class="side-card-title">🔥 热门话题</div>
+            <div id="topics"></div>
         </div>
 
+        <!-- 推荐创作者 -->
         <div class="side-card">
-            <h3>推荐帖子</h3>
-            <div id="recommend-posts"></div>
-        </div>
-
-        <div class="side-card">
-            <h3>推荐创作者</h3>
-            <div id="recommend-creators"></div>
+            <div class="side-card-title">⭐ 推荐创作者</div>
+            <div id="creators"></div>
         </div>
 
     </aside>
 
 </main>
 
-<script type="module" src="/js/index.js"></script>
 
+<!-- ===================== 悬浮发布按钮 ===================== -->
+<a href="/publish.html" class="fab-post">＋</a>
+
+
+<!-- ===================== 漫画速度线层由 index.js 注入 ===================== -->
+
+
+<!-- 页面脚本（必须放在最底部） -->
+<script type="module" src="/js/index.js"></script>
 </body>
 </html>

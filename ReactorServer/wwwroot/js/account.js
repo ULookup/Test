@@ -1,108 +1,61 @@
-// UI tabs
-const tabs = document.querySelectorAll(".side-item");
-const panels = document.querySelectorAll(".tab-panel");
+import { Api } from "./core/api.js";
+import { State } from "./core/state.js";
+import { UserCache } from "./core/userCache.js";
 
-tabs.forEach(t => {
-    t.onclick = () => {
-        tabs.forEach(x => x.classList.remove("active"));
-        t.classList.add("active");
+async function init() {
 
-        const tab = t.dataset.tab;
-        panels.forEach(p => p.style.display = "none");
-        document.getElementById(`tab-${tab}`).style.display = "block";
-    };
-});
-
-// 加载用户信息
-async function loadUser() {
-    const uid = localStorage.getItem("user_id");
-    if (!uid) return location.href = "/login.html";
-
-    const res = await fetch(`/api/user/${uid}`);
-    const json = await res.json();
-
-    if (json.code !== 0) return;
-
-    const u = json.data;
-
-    document.getElementById("avatar").src = u.avatar;
-    document.getElementById("nickname").value = u.nickname;
-    document.getElementById("signature").value = u.signature || "";
-}
-
-loadUser();
-
-
-// 修改头像
-document.getElementById("change-avatar-btn").onclick = () => {
-    document.getElementById("avatar-input").click();
-};
-
-document.getElementById("avatar-input").onchange = async () => {
-    const file = document.getElementById("avatar-input").files[0];
-    const form = new FormData();
-    form.append("file", file);
-
-    const upload = await fetch("/api/user/avatar", {
-        method: "POST",
-        body: form
-    });
-
-    const res = await upload.json();
-    if (res.code !== 0) {
-        alert("头像上传失败");
+    const uid = State.getUserId();
+    if (!uid) {
+        alert("请先登录");
+        location.href = "/login.html";
         return;
     }
 
-    document.getElementById("avatar").src = res.data.url;
-};
-
-
-// 保存资料
-document.getElementById("save-profile-btn").onclick = async () => {
-    const nickname = document.getElementById("nickname").value.trim();
-    const signature = document.getElementById("signature").value.trim();
-
-    const res = await fetch("/api/user/update", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ nickname, signature })
-    });
-
-    const json = await res.json();
-
-    if (json.code === 0) {
-        alert("资料已更新");
-        loadUser();
-    } else {
-        alert(json.msg);
+    // 加载用户数据
+    const user = await UserCache.getUser(uid);
+    if (!user) {
+        alert("加载用户数据失败");
+        return;
     }
-};
 
+    // 渲染基本资料
+    document.getElementById("avatar-preview").src = user.avatar;
+    document.getElementById("input-username").value = user.username;
+    document.getElementById("input-bio").value = user.bio || "";
 
-// 修改密码
-document.getElementById("change-pwd-btn").onclick = async () => {
-    const old_pwd = document.getElementById("old-pwd").value.trim();
-    const new_pwd = document.getElementById("new-pwd").value.trim();
+    // 自动上传头像
+    document.getElementById("avatar-file").onchange = async (ev) => {
+        const file = ev.target.files[0];
+        if (!file) return;
 
-    const res = await fetch("/api/auth/change_password", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ old_pwd, new_pwd })
-    });
+        const formData = new FormData();
+        formData.append("avatar", file);
 
-    const json = await res.json();
-    if (json.code === 0) alert("密码修改成功");
-    else alert(json.msg);
-};
+        const res = await Api.postFile("/user/avatar/upload", formData);
 
+        if (res.code === 0) {
+            UserCache.invalidate(uid);
+            document.getElementById("avatar-preview").src = file ? URL.createObjectURL(file) : user.avatar;
+            alert("头像更新成功！");
+        } else {
+            alert("上传失败：" + res.msg);
+        }
+    };
 
-// 退出登录
-document.getElementById("logout-btn").onclick = async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
+    // 保存基本资料
+    document.getElementById("save-btn").onclick = async () => {
+        const username = document.getElementById("input-username").value.trim();
+        const bio = document.getElementById("input-bio").value.trim();
 
-    localStorage.removeItem("token");
-    localStorage.removeItem("user_id");
+        const res = await Api.post("/user/profile/update", { username, bio });
 
-    location.href = "/login.html";
-};
+        if (res.code === 0) {
+            UserCache.invalidate(uid);
+            alert("保存成功！");
+        } else {
+            alert(res.msg || "保存失败");
+        }
+    };
+}
+
+init();

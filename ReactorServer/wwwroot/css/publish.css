@@ -1,174 +1,221 @@
+/*************************************************
+ * IceACG · 发布帖子页面（宇宙无敌美观版）
+ *************************************************/
+
+/* ===========================
+   背景
+=========================== */
 body {
-  margin: 0;
-  padding: 0;
-  background: #f5f8ff;
-  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(180deg, #eef2ff, #f6f8ff, #ffffff);
+    font-family: "Segoe UI", PingFang SC, sans-serif;
+    color: #222;
 }
 
-/* 顶部导航 */
-.navbar {
-  background: white;
-  height: 65px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  display: flex;
-  align-items: center;
-  position: sticky;
-  top: 0;
-}
-.nav-container {
-  max-width: 900px;
-  margin: auto;
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
-.logo {
-  width: 42px; height:42px; border-radius:50%;
-}
-.site-title {
-  color: #4AA3FF;
-  font-size: 20px;
-  font-weight: 700;
-  margin-left: 10px;
-}
-.nav-left {
-  display: flex;
-  align-items: center;
+
+/* ===========================
+   顶部 Banner
+=========================== */
+.publish-banner {
+    width: 100%;
+    height: 220px;
+
+    background: url("/static/cover-publish.jpg") center/cover no-repeat;
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 40px;
 }
 
-/* 主内容 */
+.publish-banner::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    backdrop-filter: blur(18px) brightness(1.18);
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.banner-text {
+    position: relative;
+    text-align: center;
+    color: #333;
+}
+
+.banner-text h1 {
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.banner-text p {
+    margin-top: 6px;
+    font-size: 15px;
+    color: #666;
+}
+
+
+/* ===========================
+   主体
+=========================== */
 .main {
-  max-width: 900px;
-  margin: 20px auto;
-  padding: 0 16px;
+    width: 92%;
+    max-width: 760px;
+    margin: auto;
 }
 
-.post-card {
-  background: white;
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+
+/* 主容器玻璃拟态卡片 */
+.glass-card {
+    background: rgba(255,255,255,0.82);
+    backdrop-filter: saturate(180%) blur(18px);
+
+    padding: 34px;
+    border-radius: 24px;
+
+    border: 1px solid rgba(230,230,230,0.8);
+    box-shadow: 0 14px 32px rgba(0,0,0,0.08);
 }
 
-.title {
-  font-size: 22px;
-  color: #4AA3FF;
-  margin-bottom: 16px;
+
+/* ===========================
+   表单项
+=========================== */
+.form-item {
+    margin-bottom: 26px;
 }
 
-/* 标题输入 */
-.input-title {
-  width: 100%;
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid #dfe7ff;
-  font-size: 16px;
-}
-.input-title:focus {
-  outline: none;
-  border-color: #4AA3FF;
+.form-item label {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 8px;
 }
 
-/* 正文 */
-.input-content {
-  width: 100%;
-  height: 180px;
-  margin-top: 16px;
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid #dfe7ff;
-  font-size: 15px;
-  resize: vertical;
-}
-.input-content:focus {
-  outline: none;
-  border-color: #4AA3FF;
+/* 输入框统一风格（与 account / search 统一） */
+#title,
+#tags,
+#content {
+    width: 100%;
+    padding: 14px 16px;
+
+    border-radius: 14px;
+    border: 1px solid #d4d9e3;
+    background: #fafbff;
+
+    font-size: 15px;
+    outline: none;
+
+    transition: .25s;
 }
 
-/* 标签 */
-.tags-box {
-  margin-top: 18px;
-}
-.tag-input {
-  width: 100%;
-  padding: 10px;
-  border-radius: 12px;
-  border: 1px solid #dfe7ff;
-  font-size: 14px;
-}
-.tag-list {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-  flex-wrap: wrap;
-}
-.tag {
-  background: #e7f1ff;
-  color: #4AA3FF;
-  padding: 4px 10px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-}
-.tag-close {
-  cursor: pointer;
+#title:focus,
+#tags:focus,
+#content:focus {
+    border-color: #4c8ef7;
+    box-shadow: 0 0 0 4px rgba(76,142,247,0.18);
 }
 
-/* 图片上传区域 */
-.sec-title {
-  color: #4AA3FF;
-  font-size: 18px;
-  margin-top: 20px;
-  margin-bottom: 10px;
-}
-.img-box {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-.img-preview {
-  width: 120px;
-  height: 120px;
-  border-radius: 12px;
-  object-fit: cover;
-  position: relative;
-}
-.img-wrap {
-  position: relative;
-}
-.img-delete {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  background: rgba(255,255,255,0.8);
-  border-radius: 50%;
-  width: 22px;
-  height: 22px;
-  text-align: center;
-  cursor: pointer;
+/* 内容文本框更好看 */
+#content {
+    resize: none;
+    min-height: 160px;
 }
 
-/* 按钮 */
-.btn-blue {
-  margin-top: 10px;
-  padding: 10px 14px;
-  background: #4AA3FF;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
+
+
+/* ===========================
+   图片上传区域
+=========================== */
+.img-upload-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
 }
 
+/* 已上传图片 */
+.img-list img {
+    width: 128px;
+    height: 128px;
+
+    object-fit: cover;
+    border-radius: 16px;
+
+    border: 1px solid #e1e5ee;
+    background: #fff;
+
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    transition: .25s;
+    cursor: pointer;
+}
+
+.img-list img:hover {
+    transform: scale(1.06);
+    box-shadow: 0 10px 22px rgba(0,0,0,0.12);
+}
+
+
+/* 添加图片按钮 */
+.add-img {
+    width: 128px;
+    height: 128px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 38px;
+    color: #a0a7b8;
+
+    border: 2px dashed #c5c9d3;
+    border-radius: 16px;
+
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(4px);
+
+    cursor: pointer;
+    transition: .25s;
+}
+
+.add-img:hover {
+    color: #4c8ef7;
+    border-color: #4c8ef7;
+    box-shadow: 0 6px 18px rgba(76,142,247,0.2);
+}
+
+
+
+/* ===========================
+   发布按钮
+=========================== */
 .btn-primary {
-  width: 100%;
-  margin-top: 20px;
-  padding: 14px;
-  background: #4AA3FF;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 16px;
+    width: 100%;
+    margin-top: 20px;
+
+    padding: 16px;
+    border: none;
+    border-radius: 16px;
+
+    background: linear-gradient(135deg,#4c8ef7,#6aa0ff);
+    color: white;
+
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+
+    transition: .25s;
+    box-shadow: 0 12px 22px rgba(76,142,247,0.28);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 28px rgba(76,142,247,0.38);
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
 }

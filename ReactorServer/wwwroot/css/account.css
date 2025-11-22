@@ -1,139 +1,228 @@
+/*************************************************
+ * IceACG 账号中心 — 漫画分镜完全体
+ *************************************************/
+
+
+/* ===================== 全局漫画背景 ===================== */
 body {
-  margin: 0;
-  padding: 0;
-  background: #f5f8ff;
-  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    margin: 0;
+    background:
+        radial-gradient(circle, rgba(0,0,0,0.05) 2px, transparent 2px) 0 0 / 14px 14px,
+        #fafafa;
+    overflow-x: hidden;
+    font-family: "Comic Sans MS", "Yuji Syuku", "DFKai-SB", sans-serif;
 }
 
-/* 顶栏 */
-.navbar {
-  background: white;
-  height: 65px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  display: flex;
-  position: sticky;
-  top: 0;
+/* 两侧漫画粗线条 */
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    width: 12px;
+    height: 100vh;
+    background: #000;
+    z-index: 1;
 }
-.nav-container {
-  max-width: 1100px;
-  width: 100%;
-  margin: auto;
-  display: flex;
-  justify-content: space-between;
-}
-.logo {
-  width: 42px; height: 42px; border-radius: 50%;
-}
-.site-title {
-  color: #4AA3FF;
-  font-size: 20px;
-  font-weight: 700;
-  margin-left: 10px;
+body::before { left: 0; }
+body::after  { right: 0; }
+
+
+
+/* ===================== 顶部 Banner（分镜框） ===================== */
+
+.account-banner {
+    height: 220px;
+    background: #fff;
+    border-bottom: 4px solid #000;
+    position: relative;
 }
 
-/* 主体 */
-.main {
-  max-width: 1100px;
-  margin: 20px auto;
-  padding: 0 16px;
-  display: flex;
-  gap: 20px;
+/* 大型分镜外框 */
+.account-banner::before {
+    content: "";
+    position: absolute;
+    inset: 26px 40px;
+    border: 4px solid #000;
+    border-radius: 16px;
+    box-shadow: -8px 8px 0 #000;
 }
 
-/* 左侧导航 */
-.sidebar {
-  width: 200px;
-  background: white;
-  border-radius: 16px;
-  padding: 14px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-}
-.side-item {
-  padding: 12px;
-  border-radius: 10px;
-  margin-bottom: 6px;
-  cursor: pointer;
-  font-size: 15px;
-}
-.side-item:hover {
-  background: #eef6ff;
-}
-.side-item.active {
-  background: #4AA3FF;
-  color: white;
+/* 漫画速度线 */
+.account-banner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        115deg,
+        transparent,
+        transparent 18px,
+        rgba(0,0,0,0.08) 20px
+    );
+    opacity: 0.35;
 }
 
-/* 内容区 */
-.content {
-  flex: 1;
-  background: white;
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+
+
+/* ===================== 主面板（漫画卡片） ===================== */
+
+.account-panel {
+    width: 720px;
+    margin: -80px auto 40px auto;
+    padding: 34px;
+
+    background: #fff;
+    border: 4px solid #000;
+    border-radius: 20px;
+    box-shadow: -8px 8px 0 #000;
+
+    position: relative;
 }
 
-.sec-title {
-  color: #4AA3FF;
-  font-size: 20px;
-  margin-bottom: 16px;
+.panel-title {
+    font-size: 30px;
+    font-weight: 900;
+    color: #000;
+    margin-bottom: 28px;
+
+    text-shadow:
+        -4px 4px 0 #e1e1e1,
+         2px 2px 0 #dcdcdc;
 }
 
-/* 表单元素 */
-.form-item {
-  margin-bottom: 18px;
-}
-.form-item label {
-  display: block;
-  margin-bottom: 5px;
-  color: #4c576c;
-}
-.input {
-  width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #dfe7ff;
-}
-.textarea {
-  width: 100%;
-  height: 90px;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #dfe7ff;
+
+
+/* ===================== 表单结构 ===================== */
+
+.form-block {
+    margin-bottom: 26px;
 }
 
-/* 头像区域 */
-.avatar-box {
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
+.form-label {
+    display: block;
+    margin-bottom: 10px;
+
+    font-weight: 900;
+    font-size: 16px;
+
+    color: #000;
 }
+
+
+
+/* ===================== 头像漫画化 ===================== */
+
+.avatar-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
 .avatar {
-  width: 90px;
-  height: 90px;
-  border-radius: 16px;
-  object-fit: cover;
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+
+    border: 4px solid #000;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: -6px 6px 0 #000;
+
+    transition: .25s;
 }
 
-/* 按钮 */
-.btn-primary,
-.btn-blue,
-.btn-danger {
-  padding: 12px 20px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  font-size: 15px;
+.avatar:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: -10px 10px 0 #000;
 }
+
+
+
+/* ===================== 上传头像按钮（漫画按钮） ===================== */
+
+.upload-btn {
+    padding: 10px 20px;
+    background: #ff78c9;
+    color: #fff;
+
+    border: 3px solid #000;
+    border-radius: 12px;
+    font-weight: 900;
+    font-size: 15px;
+
+    box-shadow: -4px 4px 0 #000;
+    cursor: pointer;
+    position: relative;
+
+    transition: .2s;
+}
+
+.upload-btn:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: -8px 8px 0 #000;
+}
+
+.upload-btn input {
+    display: none;
+}
+
+
+
+/* ===================== 输入框漫画化 ===================== */
+
+.input,
+.textarea {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 15px;
+
+    border: 3px solid #000;
+    border-radius: 14px;
+    background: #fff;
+
+    box-shadow: -4px 4px 0 #000;
+    transition: .2s;
+}
+
+.input:focus,
+.textarea:focus {
+    outline: none;
+    background: #fff8e5;
+    transform: translate(-2px, -2px);
+}
+
+
+
+/* ===================== 文本域 ===================== */
+
+.textarea {
+    height: 110px;
+    resize: none;
+}
+
+
+
+/* ===================== 保存按钮（漫画红色按钮） ===================== */
+
 .btn-primary {
-  background: #4AA3FF;
-  color: white;
+    width: 100%;
+    padding: 14px;
+
+    background: #4c8ef7;
+    border: 3px solid #000;
+    border-radius: 14px;
+
+    color: #fff;
+    font-size: 17px;
+    font-weight: 900;
+
+    cursor: pointer;
+    box-shadow: -6px 6px 0 #000;
+
+    transition: .25s;
 }
-.btn-blue {
-  background: #4AA3FF;
-  color: white;
-}
-.btn-danger {
-  background: #FF5E8E;
-  color: white;
+
+.btn-primary:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: -10px 10px 0 #000;
 }

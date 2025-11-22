@@ -1,0 +1,59 @@
+/*************************************************
+ * IceACG 组件库（基础结构）
+ *************************************************/
+
+/* ========== 按钮 ========== */
+.btn {
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: var(--trans-normal);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(76,142,247,.25);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 18px rgba(76,142,247,.35);
+}
+
+/* ========== 标签（话题） ========== */
+.tag {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
+    font-size: 13px;
+    margin: 4px;
+    transition: var(--trans-fast);
+}
+
+.tag:hover {
+    background: #d9e7ff;
+}
+
+/* ========== Avatar组件 ========== */
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* ========== 卡片 ========== */
+.card-hover {
+    transition: var(--trans-normal);
+    cursor: pointer;
+}
+
+.card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-medium);
+}

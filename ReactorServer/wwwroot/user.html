@@ -1,42 +1,101 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <title>用户主页 - IceACG</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>用户主页 - IceACG</title>
 
-    <link rel="icon" href="/static/logo.png">
-    <link rel="stylesheet" href="/css/user.css">
+<link rel="stylesheet" href="/css/navbar.css">
+<link rel="stylesheet" href="/css/user.css">
+
 </head>
 
 <body>
 
+<!-- 顶部导航 -->
 <header class="navbar">
     <div class="nav-container">
         <a class="nav-left" href="/index.html">
-            <img src="/static/logo.png" class="logo">
-            <span class="site-title">IceACG 用户主页</span>
+            <img src="/static/logo.png" class="nav-logo">
+            <span class="nav-title">IceACG</span>
         </a>
 
-        <div id="nav-right"></div>
+        <div class="nav-search">
+            <input id="nav-search-input" placeholder="搜索帖子 / 用户">
+            <button id="nav-search-btn" class="nav-search-btn">🔍</button>
+        </div>
+
+        <div id="nav-right" class="nav-right"></div>
     </div>
 </header>
 
-<main class="main">
 
-    <!-- 左侧：用户信息卡片 -->
-    <aside class="sidebar" id="user-info"></aside>
 
-    <!-- 右侧：帖子列表 -->
-    <section class="content">
-        <h2 class="sec-title">Ta 的帖子</h2>
-        <div id="post-list" class="post-list"></div>
+<!-- ===================== 顶部大横幅 ===================== -->
+<section class="user-cover">
+    <div class="cover-blur"></div>
+</section>
 
-        <div id="load-more" class="load-more">加载中...</div>
-    </section>
 
-</main>
+<!-- ===================== 用户信息卡片 ===================== -->
+<section class="user-header">
+    <!-- ===================== 通知中心入口 ===================== -->
+    <div class="user-actions">
+        <button class="likes-entry" data-target="likes">❤️ 喜欢</button>
+        <button class="favs-entry" data-target="favs">⭐ 收藏</button>
+        <button class="noti-entry" data-target="noti">🔔 通知</button>
+    </div>
 
+    <div class="avatar-wrap">
+        <img id="user-avatar" class="avatar" src="">
+    </div>
+
+    <div class="info-wrap">
+
+        <div class="username-row">
+            <div id="user-name" class="username"></div>
+            <span class="user-badge">ACG Member</span>
+        </div>
+
+        <div id="user-bio" class="bio"></div>
+
+        <!-- 数据统计 -->
+        <div class="stats">
+            <div class="stat-item">
+                <div id="post-count" class="value">0</div>
+                <div class="label">帖子</div>
+            </div>
+            <div class="stat-item">
+                <div id="follower-count" class="value">0</div>
+                <div class="label">粉丝</div>
+            </div>
+            <div class="stat-item">
+                <div id="following-count" class="value">0</div>
+                <div class="label">关注</div>
+            </div>
+        </div>
+
+        <!-- 关注按钮 -->
+        <button id="follow-btn" class="follow-btn">关注</button>
+        <button id="edit-btn" class="edit-btn" style="display:none;">编辑资料</button>
+    </div>
+</section>
+
+
+<!-- ===================== Tabs ===================== -->
+<nav class="tabs">
+    <button class="tab active" data-tab="posts">帖子</button>
+    <button class="tab" data-tab="likes">喜欢</button>
+    <button class="tab" data-tab="favs">收藏</button>
+    <button class="tab" data-tab="followers">粉丝</button>
+    <button class="tab" data-tab="following">关注</button>
+</nav>
+
+
+
+<!-- ===================== 内容 ===================== -->
+<main id="content"></main>
+
+<script type="module" src="/js/core/navbar.js"></script>
 <script type="module" src="/js/user.js"></script>
 
 </body>

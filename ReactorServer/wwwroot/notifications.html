@@ -1,37 +1,64 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <title>通知中心 - IceACG 社区</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>通知中心 - IceACG</title>
 
-    <link rel="icon" href="/static/logo.png">
-    <link rel="stylesheet" href="/css/notifications.css">
+<!-- 统一导航栏样式 -->
+<link rel="stylesheet" href="/css/navbar.css">
+
+<!-- 通知中心漫画风 -->
+<link rel="stylesheet" href="/css/notifications.css">
+
+<link rel="icon" href="/static/logo.png">
 </head>
 
-<body>
+<body class="noti-page">
 
+<!-- ================== 顶部导航栏（你项目里的统一版本） ================== -->
 <header class="navbar">
     <div class="nav-container">
 
         <a class="nav-left" href="/index.html">
-            <img src="/static/logo.png" class="logo">
-            <span class="site-title">IceACG 通知中心</span>
+            <img id="nav-logo" src="/static/logo.png" class="nav-logo">
+            <span class="nav-title">IceACG</span>
         </a>
 
-        <div id="nav-right"></div>
+        <div class="nav-search">
+            <input id="nav-search-input" placeholder="搜索帖子 / 用户">
+            <button id="nav-search-btn" class="nav-search-btn">🔍</button>
+        </div>
+
+        <div id="nav-right" class="nav-right"></div>
 
     </div>
 </header>
 
-<main class="main">
 
-    <h2 class="title">你的消息</h2>
+<!-- ================== 顶部 Banner ================== -->
+<section class="noti-banner">
+    <h1 class="noti-banner-title">通知中心</h1>
+</section>
 
-    <div id="notif-list" class="notif-list"></div>
 
+<!-- ================== 主体内容 ================== -->
+<main class="noti-container">
+
+    <!-- 工具栏：右对齐 -->
+    <div class="noti-top-bar">
+        <button id="read-all-btn">全部标记为已读</button>
+    </div>
+
+    <!-- 通知列表 -->
+    <div id="noti-list"></div>
+
+    <!-- 加载更多 -->
+    <div id="load-more" class="noti-empty">没有更多通知了</div>
 </main>
 
+
+<!-- ================== JS（保持和其他页面一致） ================== -->
+<script type="module" src="/js/core/navbar.js"></script>
 <script type="module" src="/js/notifications.js"></script>
 
 </body>

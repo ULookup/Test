@@ -1,50 +1,68 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <title>发现 - IceACG 社区</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="zh-CN" data-disable-nav-search="false">
 
-  <link rel="stylesheet" href="/css/discover.css">
-  <link rel="icon" href="/static/logo.png">
+<head>
+    <meta charset="UTF-8">
+    <title>发现 - IceACG</title>
+
+    <link rel="stylesheet" href="/css/vars.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+
+    <!-- 新漫画风 Discover 样式 -->
+    <link rel="stylesheet" href="/css/discover.css">
+    
+    <script type="module" src="/js/core/navbar.js"></script>
 </head>
 
 <body>
 
-  <!-- 顶部导航栏 -->
-  <header class="navbar">
+<!-- 顶部导航栏（自动由 navbar.js 渲染） -->
+<header class="navbar">
     <div class="nav-container">
-      <a class="nav-left" href="/index.html">
-        <img src="/static/logo.png" class="logo">
-        <span class="site-title">IceACG 社区</span>
-      </a>
-
-      <div class="nav-right" id="login-area"></div>
+        <a class="nav-left" href="/index.html">
+            <img id="nav-logo" class="nav-logo" src="">
+            <span class="nav-title">IceACG</span>
+        </a>
+        <div class="nav-search">
+            <input id="nav-search-input" placeholder="搜索试试~" />
+            <button id="nav-search-btn">🔍</button>
+        </div>
+        <div class="nav-right" id="nav-right"></div>
     </div>
-  </header>
+</header>
 
-  <main class="main">
+<div class="discover-main">
+    <div class="discover-container">
 
-    <!-- 热门话题 -->
-    <section class="section">
-      <h2 class="section-title">🔥 热门话题</h2>
-      <div id="topic-list" class="topic-list"></div>
-    </section>
+        <!-- 左侧帖子流 -->
+        <section class="discover-left">
+            <div class="sec-title">✨ 今日推荐</div>
+            <div id="post-list" class="post-list"></div>
+            <div id="discover-load-more" class="discover-load-more">加载更多</div>
+        </section>
 
-    <!-- 推荐帖子 -->
-    <section class="section">
-      <h2 class="section-title">✨ 精选推荐</h2>
-      <div id="recommend-list" class="recommend-list"></div>
-    </section>
+        <!-- 右侧侧边栏 -->
+        <aside class="discover-right">
 
-    <!-- 推荐创作者 -->
-    <section class="section">
-      <h2 class="section-title">🎨 推荐创作者</h2>
-      <div id="creator-list" class="creator-list"></div>
-    </section>
+            <!-- 热门话题 -->
+            <div class="side-card">
+                <div class="side-title">🔥 热门话题</div>
+                <div id="hot-topics" class="topics"></div>
+            </div>
 
-  </main>
+            <!-- 推荐创作者 -->
+            <div class="side-card">
+                <div class="side-title">🌟 优质创作者</div>
+                <div id="creators" class="creator-list"></div>
+            </div>
 
-  <script type="module" src="/js/discover.js"></script>
+        </aside>
+
+    </div>
+</div>
+
+<script type="module" src="/js/discover.js"></script>
+
 </body>
 </html>

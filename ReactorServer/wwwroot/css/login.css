@@ -1,11 +1,22 @@
+/*************************************************
+ * IceACG 登录页 — 完全漫画化（分镜风）
+ * 保持 login.html 和 login.js 不变
+ *************************************************/
+
 body {
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, #f5f8ff, #e7f0ff);
-    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-family: "Comic Sans MS", "Yuji Syuku", "DFKai-SB", "PingFang SC", sans-serif;
+
+    background: #fafafa;
+    overflow: hidden;
 }
 
-/* 居中容器 */
+
+
+/*************************************************
+ * 1. 居中布局（不变）
+ *************************************************/
 .login-container {
     height: 100vh;
     display: flex;
@@ -13,74 +24,203 @@ body {
     align-items: center;
 }
 
-/* 卡片 */
+
+
+/*************************************************
+ * 2. 卡片：漫画粗描边 + 阴影 + 圆角
+ *************************************************/
 .login-card {
-    width: 330px;
-    padding: 26px;
-    background: white;
+    width: 360px;
+
+    background: #fff;
+    border: 4px solid #000;
     border-radius: 18px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-    text-align: center;
+
+    padding: 42px 36px;
+
+    /* 漫画立体阴影 */
+    box-shadow: -8px 8px 0 #000;
+
+    position: relative;
 }
 
-.logo {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-}
 
+
+/*************************************************
+ * 3. 标题：漫画标题描边
+ *************************************************/
 .title {
-    margin-top: 10px;
-    font-size: 22px;
-    color: #4AA3FF;
-    font-weight: 700;
+    font-size: 32px;
+    font-weight: 900;
+    text-align: center;
+
+    color: #000;
+    -webkit-text-stroke: 0.5px #fff;
+
+    margin-bottom: 4px;
 }
 
 .subtitle {
-    margin-top: 4px;
-    color: #6b7a99;
-    font-size: 14px;
+    text-align: center;
+    color: #444;
+    font-size: 16px;
+    font-weight: 700;
+
+    margin-bottom: 18px;
 }
 
-/* 输入框 */
-.input {
-    width: 100%;
-    margin-top: 16px;
-    padding: 12px;
-    border-radius: 12px;
-    border: 1px solid #dfe7ff;
-    font-size: 14px;
-}
-.input:focus {
-    outline: none;
-    border-color: #4AA3FF;
-}
 
-/* 登录按钮 */
-.btn-primary {
-    width: 100%;
-    margin-top: 20px;
-    padding: 12px;
-    background: #4AA3FF;
-    color: white;
-    font-size: 15px;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-}
-.btn-primary:hover {
-    background: #3a93f5;
-}
 
-/* 注册链接 */
-.bottom-links {
+/*************************************************
+ * 4. 输入框：对话框风格
+ *************************************************/
+.input-group {
+    display: flex;
+    flex-direction: column;
     margin-top: 18px;
-    font-size: 14px;
 }
-.bottom-links a {
-    color: #4AA3FF;
+
+.input-group label {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #000;
+}
+
+.input-group input {
+    padding: 12px 14px;
+
+    border: 3px solid #000;
+    border-radius: 14px;
+
+    background: #fff;
+    font-size: 16px;
+    font-weight: 600;
+
+    box-shadow: -4px 4px 0 #000;
+    outline: none;
+
+    transition: 0.2s;
+}
+
+.input-group input:focus {
+    background: #fffde0;
+}
+
+
+
+/*************************************************
+ * 5. 登录按钮：漫画按钮
+ *************************************************/
+.login-btn {
+    margin-top: 30px;
+    width: 100%;
+
+    background: #ffd94c;
+    border: 3px solid #000;
+    border-radius: 16px;
+
+    padding: 12px 0;
+    font-size: 18px;
+    font-weight: 900;
+    color: #000;
+
+    box-shadow: -6px 6px 0 #000;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.login-btn:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: -10px 10px 0 #000;
+}
+
+
+
+/*************************************************
+ * 6. 错误消息：漫画对话框
+ *************************************************/
+.error-msg {
+    margin-top: 16px;
+    text-align: center;
+
+    font-size: 16px;
+    font-weight: 900;
+
+    color: #ff4c4c;
+    text-shadow: -2px 2px 0 #000;
+
+    display: none;
+}
+
+
+
+/*************************************************
+ * 7. 页脚：注册链接
+ *************************************************/
+.footer {
+    margin-top: 26px;
+    text-align: center;
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.footer a {
+    color: #3c7dff;
     text-decoration: none;
 }
-.bottom-links a:hover {
-    text-decoration: underline;
+
+.footer a:hover {
+    color: #ff4ea0;
+}
+
+
+
+/*************************************************
+ * 8. 背景：轻量化透明漫画背景图，不挡操作
+ *************************************************/
+.page-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    opacity: 0.15;
+    pointer-events: none;
+}
+
+.page-bg .bg-piece {
+    position: absolute;
+    width: 520px;
+    opacity: 0.16;
+    user-select: none;
+}
+
+
+
+/*************************************************
+ * 9. 小动画：卡片轻微呼吸
+ *************************************************/
+.login-card {
+    animation: breathe 3s ease-in-out infinite;
+}
+
+@keyframes breathe {
+    0% { transform: scale(1);}
+    50% { transform: scale(1.01);}
+    100% { transform: scale(1);}
+}
+
+/* 登录页背景 — 铺满全屏 */
+.login-bg {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100vh;
+
+    background: url("/static/bg/home.webp") center/cover no-repeat;
+    /* 你可以换成 home2.jpg 或 home3.jpg */
+
+    z-index: -1;            /* 在最底层 */
+    opacity: 1;          /* 可调：0.2~0.5 都好看 */
+    pointer-events: none;   /* 不挡交互 */
 }

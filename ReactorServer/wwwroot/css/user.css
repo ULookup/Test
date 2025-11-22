@@ -1,162 +1,309 @@
+/*************************************************
+ * IceACG 用户主页 — 漫画分镜旗舰级布局（最终版）
+ *************************************************/
+
+/* ===================== 全局背景 ===================== */
 body {
-  margin: 0;
-  padding: 0;
-  background: #f5f8ff;
-  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #fafafa;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+
+    /* 漫画点阵 */
+    background:
+        radial-gradient(circle, rgba(0,0,0,0.05) 2px, transparent 2px) 0 0/14px 14px;
 }
 
-/* 顶栏 */
-.navbar {
-  background: white;
-  height: 65px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  position: sticky;
-  top: 0;
-  display: flex;
+/* 两侧粗黑边 */
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    width: 12px;
+    height: 100vh;
+    background: #000;
+    z-index: 2;
 }
-.nav-container {
-  max-width: 1100px;
-  width: 100%;
-  margin: auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.logo {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-}
-.site-title {
-  font-size: 20px;
-  color: #4AA3FF;
-  font-weight: 700;
-  margin-left: 10px;
-}
-.nav-left {
-  display: flex;
-  align-items: center;
+body::before { left: 0; }
+body::after  { right: 0; }
+
+
+/* ===================== 顶部大横幅 ===================== */
+.user-cover {
+    height: 240px;
+    background: #fff;
+    position: relative;
+    border-bottom: 4px solid #000;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* 主体布局 */
-.main {
-  max-width: 1100px;
-  margin: 20px auto;
-  padding: 0 16px;
-  display: flex;
-  gap: 20px;
+/* 分镜大框 */
+.user-cover::before {
+    content: "";
+    position: absolute;
+    inset: 26px 40px;
+    border: 4px solid #000;
+    border-radius: 14px;
+    box-shadow: -8px 8px 0 #000;
 }
 
-/* 左侧用户信息 */
-.sidebar {
-  width: 260px;
-  background: white;
-  padding: 16px;
-  border-radius: 16px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+/* 速度线增强 */
+.user-cover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        100deg,
+        transparent,
+        transparent 20px,
+        rgba(0,0,0,0.05) 23px
+    );
+    opacity: 0.4;
 }
 
+
+/* ===================== 用户卡片 ===================== */
+.user-header {
+    max-width: 1100px;
+    margin: -100px auto 40px auto;
+
+    padding: 35px 40px;
+    background: #fff;
+
+    border: 4px solid #000;
+    border-radius: 22px;
+    box-shadow: -10px 10px 0 #000;
+
+    display: flex;
+    gap: 36px;
+    position: relative;
+}
+
+
+/* ===================== 右上角工具栏（通知/喜欢/收藏） ===================== */
+.user-actions {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+
+    display: flex;
+    gap: 12px;
+}
+
+.user-actions button {
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 900;
+
+    background: #ffe6f3;
+    border: 3px solid #000;
+    border-radius: 12px;
+    box-shadow: -4px 4px 0 #000;
+
+    cursor: pointer;
+    transition: 0.2s;
+}
+.user-actions button:hover {
+    transform: translate(-4px, -4px);
+}
+
+
+/* ===================== 头像 ===================== */
 .avatar {
-  width: 90px;
-  height: 90px;
-  border-radius: 16px;
-  object-fit: cover;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+
+    border: 4px solid #000;
+    border-radius: 16px;
+    box-shadow: -7px 7px 0 #000;
+    background: #fff;
+
+    transition: .2s;
+}
+.avatar:hover {
+    transform: scale(1.05) translate(-4px, -4px);
 }
 
-.nickname {
-  font-size: 20px;
-  font-weight: 700;
-  color: #4AA3FF;
-  margin-top: 10px;
+
+/* ===================== 用户信息 ===================== */
+.username-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
 }
 
-.signature {
-  font-size: 14px;
-  color: #4c576c;
-  margin-top: 6px;
+.username {
+    font-size: 34px;
+    font-weight: 900;
+    letter-spacing: 1px;
+
+    text-shadow: -3px 3px #000;
+    color: #fff;
+    -webkit-text-stroke: 1px #000;
 }
 
+/* 徽章 */
+.user-badge {
+    padding: 6px 14px;
+    background: #ffe9f7;
+
+    border: 3px solid #000;
+    border-radius: 10px;
+    box-shadow: -4px 4px 0 #000;
+
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.bio {
+    margin-top: 6px;
+    font-size: 15px;
+    color: #333;
+}
+
+
+/* ===================== Stats ===================== */
 .stats {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 18px;
-}
-.stat {
-  text-align: center;
-}
-.stat-num {
-  font-size: 18px;
-  color: #4AA3FF;
-  font-weight: 700;
-}
-.stat-title {
-  font-size: 12px;
-  color: #75819e;
+    margin-top: 20px;
+    display: flex;
+    gap: 30px;
 }
 
-/* 关注按钮 */
-.btn-follow {
-  width: 100%;
-  margin-top: 16px;
-  padding: 10px;
-  background: #4AA3FF;
-  border: none;
-  color: white;
-  border-radius: 12px;
-  cursor: pointer;
-}
-.btn-unfollow {
-  width: 100%;
-  margin-top: 16px;
-  padding: 10px;
-  background: #ff6b81;
-  border: none;
-  color: white;
-  border-radius: 12px;
-  cursor: pointer;
+.stat-item {
+    text-align: center;
+    background: #fff;
+
+    padding: 12px 22px;
+    border: 3px solid #000;
+    border-radius: 14px;
+    box-shadow: -4px 4px 0 #000;
 }
 
-/* 右侧帖子区 */
-.content {
-  flex: 1;
-  background: white;
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+.stat-item .value {
+    font-size: 24px;
+    font-weight: 900;
+}
+.stat-item .label {
+    font-size: 13px;
+    color: #444;
 }
 
-.sec-title {
-  font-size: 20px;
-  color: #4AA3FF;
-  margin-bottom: 16px;
+
+/* ===================== 按钮 ===================== */
+.follow-btn,
+.edit-btn {
+    padding: 10px 26px;
+    background: #ff78c9;
+    color: #fff;
+    font-weight: 900;
+    font-size: 15px;
+
+    border: 3px solid #000;
+    border-radius: 16px;
+    box-shadow: -4px 4px 0 #000;
+
+    cursor: pointer;
+    margin-top: 18px;
+    transition: .2s;
+}
+.follow-btn:hover,
+.edit-btn:hover {
+    transform: translate(-4px, -4px);
 }
 
-/* 帖子卡片（与首页统一） */
-.post-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+
+/* ===================== Tabs ===================== */
+.tabs {
+    max-width: 1100px;
+    margin: 10px auto 30px auto;
+
+    display: flex;
+    justify-content: center;
+    gap: 18px;
 }
-.post-card {
-  background: white;
-  padding: 16px;
-  border-radius: 14px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  cursor: pointer;
+
+.tab {
+    padding: 12px 28px;
+    background: #fff;
+
+    border: 3px solid #000;
+    border-radius: 16px;
+    box-shadow: -4px 4px 0 #000;
+
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.2s;
 }
-.post-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
+.tab:hover {
+    transform: translate(-3px, -3px);
 }
-.post-content {
-  font-size: 14px;
-  color: #4c576c;
-  margin-top: 6px;
+
+.tab.active {
+    background: #4c8ef7;
+    color: #fff;
 }
-.load-more {
-  text-align: center;
-  padding: 14px;
-  color: #75819e;
-  margin-top: 10px;
+
+
+
+/* ===================== 内容区 ===================== */
+#content {
+    max-width: 1100px;
+    margin: auto;
+}
+
+
+/* 帖子卡片 */
+.post-item {
+    background: #fff;
+    padding: 20px;
+    border: 3px solid #000;
+    border-radius: 18px;
+
+    box-shadow: -7px 7px 0 #000;
+    margin-bottom: 22px;
+
+    cursor: pointer;
+    transition: .2s;
+}
+.post-item:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: -12px 12px 0 #000;
+}
+
+
+/* 关注/粉丝项 */
+.follow-item {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+
+    background: #fff;
+    border: 3px solid #000;
+    border-radius: 16px;
+    box-shadow: -7px 7px 0 #000;
+
+    margin-bottom: 16px;
+    cursor: pointer;
+    transition: .2s;
+}
+.follow-item:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: -12px 12px 0 #000;
+}
+
+.follow-item img {
+    width: 60px;
+    height: 60px;
+
+    object-fit: cover;
+
+    border: 3px solid #000;
+    border-radius: 12px;
+
+    margin-right: 14px;
 }

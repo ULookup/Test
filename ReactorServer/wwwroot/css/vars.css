@@ -1,0 +1,51 @@
+/*************************************************
+ * IceACG 全局 Design Tokens（UI 变量体系）
+ *************************************************/
+
+:root {
+
+    /* ========== 色彩体系 ========== */
+    --color-primary: #4c8ef7;
+    --color-primary-light: #6aa7ff;
+    --color-primary-soft: #e6eeff;
+
+    --color-text-main: #222;
+    --color-text-secondary: #555;
+    --color-text-light: #888;
+
+    --color-border: #e6e6e6;
+    --color-bg-card: #ffffff;
+    --color-bg-soft: #f5f6fa;
+
+    /* 玻璃拟态背景 */
+    --glass-bg: rgba(255, 255, 255, 0.75);
+    --glass-border: rgba(230,230,230,0.65);
+
+    /* ========== 圆角体系 ========== */
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 18px;
+
+    /* ========== 阴影体系 ========== */
+    --shadow-soft: 0 4px 12px rgba(0,0,0,0.05);
+    --shadow-medium: 0 8px 20px rgba(0,0,0,0.08);
+    --shadow-strong: 0 14px 32px rgba(0,0,0,0.12);
+
+    /* ========== 字体体系 ========== */
+    --font-main: "Segoe UI", "PingFang SC", sans-serif;
+
+    /* ========== 过渡动画 ========== */
+    --trans-fast: 0.15s ease;
+    --trans-normal: 0.25s ease;
+    --trans-slow: 0.35s ease;
+
+    /* ========== 间距系统 ========== */
+    --space-xs: 6px;
+    --space-sm: 10px;
+    --space-md: 16px;
+    --space-lg: 22px;
+    --space-xl: 32px;
+
+    /* ========== 布局宽度 ========== */
+    --max-width-page: 1300px;
+}

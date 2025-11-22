@@ -1,0 +1,410 @@
+/*************************************************
+ * IceACG 顶部导航栏 — 完全漫画化（分镜风）
+ * 保留原 navbar.js 全逻辑
+ *************************************************/
+
+/*************************************************
+ * 1. 导航栏容器（分镜粗线条）
+ *************************************************/
+
+.navbar {
+    width: 100%;
+    height: 74px;
+
+    background: #ffffff;
+    border-bottom: 4px solid #000;
+    box-shadow: 0 4px 0 #000;
+
+    position: sticky;
+    top: 0;
+    z-index: 9999; 
+
+    display: flex;
+    align-items: center;
+}
+
+.nav-container {
+    width: 92%;
+    max-width: 1280px;
+    margin: auto;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+/*************************************************
+ * 2. 左侧 Logo（漫画头像 + 文字描边）
+ *************************************************/
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.nav-logo {
+    width: 48px;
+    height: 48px;
+    border: 3px solid #000;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #fff;
+    box-shadow: -3px 3px 0 #ababab;
+}
+
+.nav-title {
+    font-size: 22px;       /* 略小一点，更干净 */
+    font-weight: 650;      /* 精准的中粗，不夸张 */
+    color: #111;           /* 比 #000 更柔 */
+    letter-spacing: 0.5px; /* 加一点点呼吸感 */
+    text-shadow: -2px 2px 0 #c8c8c8; /* 保留分镜风阴影，但弱化 */
+    -webkit-text-stroke: 1px; 
+}
+
+
+/*************************************************
+ * 3. 搜索框（漫画对话框 + 粗线条）
+ *************************************************/
+
+.nav-search {
+    width: 360px;
+    height: 46px;
+
+    display: flex;
+    align-items: center;
+
+    background: #fff;
+    border: 3px solid #000;
+    border-radius: 14px;
+
+    padding: 0 10px;
+    gap: 8px;
+
+    box-shadow: -3px 3px 0 #ababab;
+
+     transition:
+        transform .25s cubic-bezier(.33,1.4,.55,1),
+        box-shadow .25s cubic-bezier(.33,1.4,.55,1),
+        background .22s ease,
+        border-color .22s ease;
+
+}
+
+.nav-search:focus-within {
+    transform: translateY(-2px) scale(1.02);   /* 微微弹起 */
+    background: #fffef4;                       /* 更亮一点 */
+    border-color: #000;
+
+    box-shadow:
+        -4px 4px 0 #000,
+        0 0 12px rgba(0,0,0,0.15),
+        0 6px 18px rgba(0,0,0,0.10);
+}
+
+#nav-search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+}
+
+.nav-search-btn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+
+    font-size: 20px;
+    opacity: 0.8;
+    transition: 0.2s;
+}
+
+.nav-search-btn:hover {
+    transform: scale(1.2) rotate(-8deg);
+    opacity: 1;
+}
+
+
+/*************************************************
+ * 4. 右侧区域（登录 / 用户菜单）
+ *************************************************/
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+
+/*************************************************
+ * 5. 登录按钮（漫画风按钮）
+ *************************************************/
+
+.nav-login-btn,
+.login-btn {
+    padding: 10px 18px;
+
+    background: #ffd94c;
+    border: 3px solid #000;
+    border-radius: 14px;
+
+    font-size: 15px;
+    font-weight: 900;
+    color: #000;
+
+    box-shadow: -4px 4px 0 #000;
+    cursor: pointer;
+    transition: transform .18s cubic-bezier(.33,1.6,.66,1),
+                box-shadow .18s ease;
+}
+
+.nav-login-btn:hover,
+.login-btn:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: -7px 7px 0 #000;
+}
+
+
+/*************************************************
+ * 6. 用户头像（漫画风强化）
+ *************************************************/
+
+.nav-user {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 6px 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    border: 2px solid transparent;
+
+    transition: 0.25s;
+}
+
+.nav-user:hover {
+    background: #fff4f9;
+    border-color: #000;
+}
+
+.nav-avatar {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 50%;
+    border: 3px solid #000;
+
+    object-fit: cover;
+    background: #fff;
+
+    transition: 0.2s;
+}
+
+.nav-user:hover .nav-avatar {
+    transform: scale(1.08) rotate(-2deg);
+    box-shadow: -4px 4px 0 #000, 0 0 8px rgba(0,0,0,0.15);
+    transition: transform .22s cubic-bezier(.33,1.5,.66,1),
+                box-shadow .22s ease;
+}
+
+
+
+/*************************************************
+ * 7. 下拉菜单（漫画分镜版）
+ *************************************************/
+
+.nav-menu {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    z-index: 10000; 
+
+    width: 190px;
+    padding: 16px;
+
+    background: #fff;
+    border: 3px solid #000;
+    border-radius: 16px;
+    box-shadow: -6px 6px 0 #000;
+
+    opacity: 0;
+    pointer-events: none; /* 关键：不可点击但不会触发关闭 */
+
+    transform: translateY(-10px);
+    transition: opacity .25s ease, transform .25s ease;
+}
+
+.nav-menu.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+
+@keyframes menuFade {
+    0%   { opacity: 0; transform: translateY(-12px) scale(.98); }
+    60%  { opacity: 1; transform: translateY(0) scale(1.02); }
+    100% { transform: translateY(0) scale(1); }
+}
+
+
+.nav-menu-item {
+    padding: 12px 4px;
+    font-size: 15px;
+    font-weight: 800;
+
+    border-radius: 10px;
+    cursor: pointer;
+
+    transition: 0.25s;
+}
+
+.nav-menu-item:hover {
+    background: #ffeaea;
+    transform: translateX(6px);
+}
+
+
+/*************************************************
+ * 8. 响应式优化
+ *************************************************/
+
+@media (max-width: 780px) {
+    .nav-search {
+        display: none;
+    }
+}
+
+/* 用户名样式（新增） */
+.nav-username {
+    font-size: 16px;
+    font-weight: 500;              /* 超粗漫画风 */
+    color: #000;
+    margin-left: 4px;              /* 与头像拉开更舒服 */
+    letter-spacing: .3px;          /* 轻微字距，更漫画 */
+    font-family: "Impact", "Arial Black",
+                 "Yuji Syuku", "Microsoft YaHei",
+                 sans-serif;
+}
+
+/* ==========================
+   搜索页导航栏二次元提示框
+   ========================== */
+
+.nav-search.search-page-mode {
+    position: relative;
+    width: 260px;                 /* 缩小一点更可爱 */
+    height: 40px;
+
+    background: #fffaf5;          /* 柔和漫画底色 */
+    border: 3px solid #000;
+    border-radius: 14px;
+    box-shadow: -4px 4px 0 #000;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: default !important;
+    pointer-events: none !important;
+
+    animation: sfxBounce 2.2s ease-in-out infinite;
+}
+
+.nav-search.search-page-mode input,
+.nav-search.search-page-mode button {
+    display: none !important;
+}
+
+/* =====================================================
+   搜索页导航栏 —— 颜文字版提示框（萌系漫画风）
+   ===================================================== */
+
+.nav-search.search-page-mode {
+    position: relative;
+    width: 260px;              
+    height: 40px;
+
+    background: #fff7fb;        /* 柔粉背景 */
+    border: 3px solid #000;
+    border-radius: 14px;
+
+    box-shadow: -4px 4px 0 #000;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: default !important;
+    pointer-events: none !important;
+
+    animation: kawaiiBreath 2.2s ease-in-out infinite;
+}
+
+/* 隐藏原来的输入框和按钮 */
+.nav-search.search-page-mode input,
+.nav-search.search-page-mode button {
+    display: none !important;
+}
+
+/* 主要提示文案（可爱颜文字） */
+.nav-search.search-page-mode::before {
+    content: "(≧▽≦) 搜索模式中…";
+    font-size: 14px;
+    font-weight: 900;
+    color: #000;
+    letter-spacing: 1px;
+}
+
+/* 背景拟声词 / 装饰颜文字 */
+.nav-search.search-page-mode::after {
+    content: "ヾ(≧▽≦*)o";
+    position: absolute;
+    top: -14px;
+    right: -6px;
+
+    font-size: 12px;
+    font-weight: 900;
+    color: rgba(0,0,0,0.15);
+
+    transform: rotate(-6deg);
+    pointer-events: none;
+}
+
+/* 漫画风呼吸动画 */
+@keyframes kawaiiBreath {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+.nav-discover {
+    margin-left: 14px;
+    padding: 10px 18px;
+
+    background: #eaf8ff;
+    border: 3px solid #000;
+    border-radius: 14px;
+
+    font-size: 15px;
+    font-weight: 900;
+    color: #000;
+    text-decoration: none;
+
+    box-shadow: -3px 3px 0 #ababab;
+
+    transition: 0.2s;
+}
+
+.nav-discover:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: -7px 7px 0 #000;
+    background: #d1ecff;
+}

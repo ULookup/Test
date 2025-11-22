@@ -1,34 +1,55 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <title>帖子详情 - IceACG</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>帖子详情 - IceACG</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="icon" href="/static/logo.png">
-    <link rel="stylesheet" href="/css/post.css">
+<!-- 全局导航栏样式（首页同款） -->
+<link rel="stylesheet" href="/css/navbar.css">
+
+<!-- 帖子详情页专用样式 -->
+<link rel="stylesheet" href="/css/post.css">
+
+<link rel="icon" href="/static/logo.png">
 </head>
 
-<body>
+<body class="post-page">
 
+<!-- ====================== 统一导航栏（首页同款） ====================== -->
 <header class="navbar">
     <div class="nav-container">
 
         <a class="nav-left" href="/index.html">
-            <img src="/static/logo.png" class="logo">
-            <span class="site-title">IceACG 帖子</span>
+            <img src="/static/logo.png" class="nav-logo">
+            <span class="nav-title">IceACG</span>
         </a>
 
-        <div id="nav-right"></div>
+        <div class="nav-search">
+            <input id="nav-search-input" placeholder="搜索帖子 / 用户">
+            <button id="nav-search-btn" class="nav-search-btn">🔍</button>
+        </div>
+
+        <div id="nav-right" class="nav-right"></div>
 
     </div>
 </header>
 
+<!-- ====================== 顶部 Banner ====================== -->
+<section class="post-banner">
+    <div class="post-banner-inner">
+        <h1 class="post-banner-title">帖子详情</h1>
+    </div>
+</section>
+
+<!-- ====================== 主体内容 ====================== -->
 <main class="main">
 
-    <section id="post-box" class="post-box"></section>
+    <!-- 帖子内容由 JS 渲染 -->
+    <section id="post-box" class="post-box glass-card"></section>
 
-    <section class="comment-section">
+    <!-- 评论区 -->
+    <section class="comment-section glass-card">
         <h2 class="comment-title">评论区</h2>
 
         <div class="comment-editor">
@@ -41,6 +62,15 @@
 
 </main>
 
+<!-- ====================== 大图查看 ====================== -->
+<div id="img-viewer" class="img-viewer">
+    <div class="img-viewer-bg"></div>
+    <img id="img-viewer-img" class="img-viewer-img">
+</div>
+
+<!-- JS -->
+<script type="module" src="/js/core/navbar.js"></script>
 <script type="module" src="/js/post.js"></script>
+
 </body>
 </html>

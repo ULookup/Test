@@ -1,96 +1,77 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <title>账号中心 - IceACG</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>账号中心 - IceACG</title>
 
-    <link rel="icon" href="/static/logo.png">
-    <link rel="stylesheet" href="/css/account.css">
+<link rel="stylesheet" href="/css/navbar.css">
+<link rel="stylesheet" href="/css/account.css">
+<script type="module" src="/js/core/navbar.js"></script>
+<script type="module" src="/js/account.js"></script>
+
 </head>
 
 <body>
 
+<!-- 顶部导航 -->
 <header class="navbar">
     <div class="nav-container">
         <a class="nav-left" href="/index.html">
-            <img src="/static/logo.png" class="logo">
-            <span class="site-title">IceACG 账号中心</span>
+            <img src="/static/logo.png" class="nav-logo">
+            <span class="nav-title">IceACG</span>
         </a>
 
-        <div id="nav-right"></div>
+        <div class="nav-search">
+            <input id="nav-search-input" placeholder="搜索帖子 / 用户">
+            <button id="nav-search-btn" class="nav-search-btn">🔍</button>
+        </div>
+
+        <div id="nav-right" class="nav-right"></div>
     </div>
 </header>
 
-<main class="main">
 
-    <!-- 左侧导航 -->
-    <aside class="sidebar">
-        <div class="side-item active" data-tab="profile">个人资料</div>
-        <div class="side-item" data-tab="security">账号安全</div>
-        <div class="side-item" data-tab="logout">退出登录</div>
-    </aside>
 
-    <!-- 右侧内容 -->
-    <section class="content">
+<!-- 顶部装饰 Banner（增强仪式感） -->
+<section class="account-banner">
+    <div class="banner-blur"></div>
+</section>
 
-        <!-- 个人资料 -->
-        <div id="tab-profile" class="tab-panel">
 
-            <h2 class="sec-title">个人资料</h2>
+<!-- 主面板（玻璃拟态卡片） -->
+<main class="account-panel">
 
-            <div class="avatar-box">
-                <img id="avatar" class="avatar" src="/static/logo.png">
-                <button id="change-avatar-btn" class="btn-blue">修改头像</button>
-                <input type="file" id="avatar-input" accept="image/*" style="display:none;">
-            </div>
+    <h2 class="panel-title">账号中心</h2>
 
-            <div class="form-item">
-                <label>昵称</label>
-                <input id="nickname" class="input">
-            </div>
+    <!-- 头像修改 -->
+    <section class="form-block">
+        <label class="form-label">头像</label>
 
-            <div class="form-item">
-                <label>签名</label>
-                <textarea id="signature" class="textarea" placeholder="介绍一下自己吧~"></textarea>
-            </div>
+        <div class="avatar-row">
+            <img id="avatar-preview" class="avatar">
 
-            <button id="save-profile-btn" class="btn-primary">保存资料</button>
-
+            <label class="upload-btn">
+                更换头像
+                <input id="avatar-file" type="file" accept="image/*">
+            </label>
         </div>
-
-        <!-- 账号安全 -->
-        <div id="tab-security" class="tab-panel" style="display:none;">
-
-            <h2 class="sec-title">账号安全</h2>
-
-            <div class="form-item">
-                <label>旧密码</label>
-                <input id="old-pwd" type="password" class="input">
-            </div>
-
-            <div class="form-item">
-                <label>新密码</label>
-                <input id="new-pwd" type="password" class="input">
-            </div>
-
-            <button id="change-pwd-btn" class="btn-primary">修改密码</button>
-
-        </div>
-
-        <!-- 退出登录 -->
-        <div id="tab-logout" class="tab-panel" style="display:none;">
-
-            <h2 class="sec-title">退出账号</h2>
-            <button id="logout-btn" class="btn-danger">退出登录</button>
-
-        </div>
-
     </section>
 
-</main>
+    <!-- 用户名 -->
+    <section class="form-block">
+        <label class="form-label">用户名</label>
+        <input id="input-username" class="input" type="text" placeholder="输入新的用户名">
+    </section>
 
-<script type="module" src="/js/account.js"></script>
+    <!-- 简介 -->
+    <section class="form-block">
+        <label class="form-label">个人简介</label>
+        <textarea id="input-bio" class="textarea" placeholder="介绍一下自己吧"></textarea>
+    </section>
+
+    <button id="save-btn" class="btn-primary">保存修改</button>
+
+</main>
 
 </body>
 </html>

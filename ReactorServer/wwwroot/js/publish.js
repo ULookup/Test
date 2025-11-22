@@ -1,122 +1,130 @@
-// 登录状态检查
-const navRight = document.getElementById("nav-right");
-const token = localStorage.getItem("token");
-const uid = localStorage.getItem("user_id");
+import { Api } from "./core/api.js";
+import { State } from "./core/state.js";
 
-if (!token || !uid) {
-    navRight.innerHTML = `<button onclick="location.href='/login.html'" class="btn-blue">登录</button>`;
-} else {
-    fetch(`/api/user/${uid}`)
-      .then(r => r.json())
-      .then(j => {
-          navRight.innerHTML = `
-              <img src="${j.data.avatar}" style="width:36px;height:36px;border-radius:50%;cursor:pointer;"
-                   onclick="location.href='/user.html?id=${j.data.id}'">
-          `;
-      });
+// =============== 登录强制判断 START ===============
+if (!State.isLogin()) {
+    location.href = "/login.html";
 }
+// =============== 登录强制判断 END ===============
 
-// 标签逻辑
-const tagInput = document.getElementById("tag-input");
-const tagList = document.getElementById("tag-list");
-let tags = [];
 
-tagInput.addEventListener("keydown", e => {
-    if (e.key === "Enter") {
-        e.preventDefault();
-        let t = tagInput.value.trim();
-        if (t && !tags.includes(t)) {
-            tags.push(t);
-            renderTags();
-        }
-        tagInput.value = "";
+// 登录 UI
+async function initLoginUI() {
+    const nav = document.getElementById("nav-right");
+
+    if (!State.isLogin()) {
+        nav.innerHTML = `<button onclick="location.href='/login.html'">登录</button>`;
+        return;
     }
-});
 
-function renderTags() {
-    tagList.innerHTML = tags.map(t => `
-      <div class="tag">${t} <span class="tag-close" onclick="removeTag('${t}')">×</span></div>
-    `).join("");
+    const uid = State.getUserId();
+    const res = await Api.get(`/user/${uid}`);
+
+    nav.innerHTML = `
+        <img src="${res.data.avatar}" class="nav-avatar" onclick="location.href='/account.html'">
+    `;
 }
 
-window.removeTag = (t) => {
-    tags = tags.filter(x => x !== t);
-    renderTags();
-};
-
-// 图片上传
+// 图片相关
+const imgListBox = document.getElementById("img-list");
+const imgFileInput = document.getElementById("img-file");
 const addImgBtn = document.getElementById("add-img-btn");
-const imgInput = document.getElementById("img-input");
-const imgBox = document.getElementById("img-box");
 
 let images = [];
 
-addImgBtn.onclick = () => imgInput.click();
+// 点击按钮 → 打开文件选择
+addImgBtn.onclick = () => imgFileInput.click();
 
-imgInput.onchange = async () => {
-    for (let file of imgInput.files) {
-        const form = new FormData();
-        form.append("file", file);
 
-        const res = await fetch("/api/upload/image", {
+// 选择图片 → 上传
+imgFileInput.onchange = async () => {
+    const file = imgFileInput.files[0];
+    if (!file) return;
+
+    if (images.length >= 6) {
+        alert("最多上传 6 张图片");
+        return;
+    }
+
+    const form = new FormData();
+    form.append("file", file);
+
+    let res;
+    try {
+        res = await fetch("/upload/image", {
             method: "POST",
+            headers: {
+                // 和 Api.js 保持完全一致！
+                "Authorization": State.getToken()
+            },
             body: form
         });
-
-        const json = await res.json();
-        if (json.code === 0) {
-            images.push(json.data.url);
-        }
+    } catch (e) {
+        alert("上传失败（网络错误）");
+        console.error(e);
+        return;
     }
+
+    let json;
+    try {
+        json = await res.json();
+    } catch (e) {
+        alert("上传失败（服务器未返回 JSON）");
+        console.error(e);
+        return;
+    }
+
+    if (json.code !== 0) {
+        alert(json.msg || "上传失败");
+        return;
+    }
+
+    const url = json.data.url;
+    images.push(url);
+
     renderImages();
 };
 
+
+// 渲染预览图
 function renderImages() {
-    imgBox.innerHTML = images.map(url => `
-      <div class="img-wrap">
-        <img src="${url}" class="img-preview">
-        <div class="img-delete" onclick="deleteImage('${url}')">×</div>
-      </div>
+    imgListBox.innerHTML = images.map(url => `
+        <img src="${url}" onclick="this.remove();">
     `).join("");
 }
 
-window.deleteImage = (url) => {
-    images = images.filter(x => x !== url);
-    renderImages();
-};
 
 // 发布帖子
-document.getElementById("submit-btn").onclick = async () => {
+document.getElementById("publish-btn").onclick = async () => {
+    if (!State.isLogin()) {
+        alert("请先登录");
+        return;
+    }
 
-    const title = document.getElementById("post-title").value.trim();
-    const content = document.getElementById("post-content").value.trim();
+    const title = document.getElementById("title").value.trim();
+    const content = document.getElementById("content").value.trim();
+    const tags = document.getElementById("tags").value.trim().split(",")
+                   .map(t => t.trim()).filter(t => t.length > 0);
 
     if (!title || !content) {
-        alert("标题和正文不能为空");
+        alert("标题和内容不能为空");
         return;
     }
 
-    const body = {
+    const res = await Api.post("/post/create", {
         title,
         content,
-        tags,
-        images
-    };
-
-    const res = await fetch("/api/post/create", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(body)
+        images,
+        tags
     });
 
-    const json = await res.json();
-
-    if (json.code !== 0) {
-        alert(json.msg || "发布失败");
-        return;
+    if (res.code === 0) {
+        alert("发布成功！");
+        location.href = `/post.html?id=${res.data.id}`;
+    } else {
+        alert(res.msg);
     }
-
-    // 跳转到帖子详情页
-    alert("发布成功！");
-    location.href = `/post.html?id=${json.data.id}`;
 };
+
+// 初始化页面
+initLoginUI();

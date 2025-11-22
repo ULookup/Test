@@ -1,0 +1,19 @@
+/*************************************************
+ * IceACG 全局基础样式
+ *************************************************/
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    font-family: var(--font-main);
+}
+
+body {
+    background: var(--color-bg-soft);
+    color: var(--color-text-main);
+}
+
+a { text-decoration: none; color: inherit; }
+img { display: block; }

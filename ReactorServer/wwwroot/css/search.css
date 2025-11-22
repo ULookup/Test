@@ -1,168 +1,355 @@
+/*************************************************
+ * IceACG 搜索页面 — 漫画分镜风 完整统一版
+ *************************************************/
+
 body {
-  margin: 0;
-  padding: 0;
-  background: #f5f8ff;
-  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    margin: 0;
+    background: #fafafa;
+    font-family: "Yuji Syuku", "Comic Sans MS", "PingFang SC", sans-serif;
+    color: #000;
 }
 
-/* 顶部导航 */
-.navbar {
-  background: white;
-  height: 65px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  display: flex;
-  align-items: center;
-  position: sticky;
-  top: 0;
-}
-.nav-container {
-  max-width: 1100px;
-  width: 100%;
-  margin: auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.nav-left {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-}
-.logo {
-  width: 42px; height: 42px; border-radius: 50%;
-}
-.site-title {
-  margin-left: 10px;
-  font-size: 20px;
-  color: #4AA3FF;
-  font-weight: 700;
+
+/* ===========================
+   顶部 Banner（分镜风）
+   =========================== */
+
+.search-banner {
+    width: 100%;
+    height: 160px;
+
+    border-bottom: 4px solid #000;
+    box-shadow: 0 4px 0 #000;
+
+    background: #fff;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* 搜索框 */
-.search-box {
-  display: flex;
-  align-items: center;
-  background: #e7f0ff;
-  padding: 6px 10px;
-  border-radius: 20px;
-  gap: 6px;
-}
-.search-box input {
-  border: none;
-  background: transparent;
-  font-size: 14px;
-  outline: none;
-}
-.search-box button {
-  background: #4AA3FF;
-  color: white;
-  border: none;
-  padding: 7px 9px;
-  border-radius: 50%;
-  cursor: pointer;
+.banner-inner {
+    text-align: center;
 }
 
-/* 主布局 */
-.main {
-  max-width: 1100px;
-  margin: 20px auto;
-  display: flex;
-  gap: 20px;
-  padding: 0 15px;
-}
-.left {
-  flex: 1;
-}
-.right {
-  width: 260px;
+.banner-title {
+    font-size: 32px;
+    font-weight: 900;
+    color: #000;
 }
 
-/* 标题 */
-.sec-title {
-  font-size: 18px;
-  color: #4AA3FF;
-  margin-bottom: 12px;
+.banner-sub {
+    font-size: 15px;
+    margin-top: 6px;
+    font-weight: 700;
+    color: #444;
 }
 
-/* 帖子结果 */
-.post-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+
+
+/* ===========================
+   搜索栏（漫画对话框）
+   =========================== */
+
+.search-bar {
+    width: 80%;
+    max-width: 780px;
+    margin: 26px auto;
+
+    display: flex;
+    gap: 12px;
+
+    background: #fff;
+    border: 4px solid #000;
+    border-radius: 18px;
+
+    padding: 12px 16px;
+    box-shadow: -6px 6px 0 #000;
 }
+
+#search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 17px;
+    font-weight: 700;
+    background: transparent;
+}
+
+.search-btn {
+    background: #ffd94c;
+    border: 3px solid #000;
+    border-radius: 14px;
+
+    padding: 10px 18px;
+    font-size: 18px;
+    font-weight: 900;
+    cursor: pointer;
+
+    box-shadow: -4px 4px 0 #000;
+    transition: 0.2s;
+}
+
+.search-btn:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: -8px 8px 0 #000;
+}
+
+
+
+/* ===========================
+   Tabs（漫画风）
+   =========================== */
+
+.tabs {
+    width: 80%;
+    max-width: 780px;
+
+    margin: 20px auto;
+    display: flex;
+    gap: 20px;
+}
+
+.tab {
+    padding: 10px 18px;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+
+    background: #fff;
+    border: 3px solid #000;
+    border-radius: 12px;
+    box-shadow: -4px 4px 0 #000;
+
+    transition: 0.2s;
+}
+
+.tab.active {
+    background: #ffd94c;
+}
+
+.tab:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: -8px 8px 0 #000;
+}
+
+
+
+/* ===========================
+   结果列表区域
+   =========================== */
+
+.result-box {
+    width: 80%;
+    max-width: 780px;
+    margin: 0 auto;
+}
+
+
+
+/* ===========================
+   Post Card（漫画分镜）
+
+   这里保持与你首页的“manga-card”风格一致
+   =========================== */
 
 .post-card {
-  background: white;
-  padding: 16px;
-  border-radius: 14px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  cursor: pointer;
+    background: #fff;
+    border: 4px solid #000;
+    border-radius: 18px;
+
+    padding: 20px;
+    margin: 20px 0;
+
+    box-shadow: -6px 6px 0 #000;
+    cursor: pointer;
+    transition: 0.25s;
 }
+
 .post-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(0,0,0,0.07);
-  transition: 0.1s;
+    transform: translate(-4px, -4px);
+    box-shadow: -10px 10px 0 #000;
 }
 
 .post-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-}
-.post-content {
-  font-size: 14px;
-  color: #4c576c;
-  margin-top: 6px;
-}
-.tags {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-}
-.tag {
-  padding: 4px 8px;
-  font-size: 12px;
-  background: #e7f1ff;
-  color: #4AA3FF;
-  border-radius: 10px;
+    font-size: 20px;
+    font-weight: 900;
+    color: #000;
+    margin-bottom: 6px;
 }
 
-/* 用户结果 */
-.user-list {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+.post-content {
+    font-size: 15px;
+    color: #444;
 }
+
+
+
+/* ===========================
+   User Card（漫画风）
+   =========================== */
 
 .user-card {
-  display: flex;
-  gap: 10px;
-  padding: 10px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  cursor: pointer;
+    background: #fff;
+    border: 4px solid #000;
+    border-radius: 18px;
+
+    padding: 18px 20px;
+    margin: 20px 0;
+
+    box-shadow: -6px 6px 0 #000;
+    cursor: pointer;
+    transition: 0.25s;
 }
+
 .user-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(0,0,0,0.07);
+    transform: translate(-4px, -4px);
+    box-shadow: -10px 10px 0 #000;
+}
+
+.user-row {
+    display: flex;
+    align-items: center;
 }
 
 .user-avatar {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
+    width: 54px;
+    height: 54px;
+
+    border-radius: 50%;
+    border: 3px solid #000;
+    object-fit: cover;
+
+    margin-right: 14px;
+    background: #fff;
 }
-.user-body {
-  flex: 1;
-}
+
 .user-name {
-  font-size: 15px;
-  color: #4AA3FF;
-  font-weight: 600;
+    font-size: 17px;
+    font-weight: 900;
 }
-.user-signature {
-  font-size: 13px;
-  color: #4c576c;
-  margin-top: 4px;
+
+
+
+/* 加载更多（漫画风） */
+.load-more {
+    text-align: center;
+    padding: 20px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #444;
+}
+
+/* ============ 搜索条动效 ============ */
+
+/* ------ 丝滑漫画风输入聚焦动画 ------ */
+
+.search-bar {
+    transition: box-shadow 0.35s ease, transform 0.35s cubic-bezier(.25,1.4,.42,1);
+    will-change: transform, box-shadow;
+    transform-origin: center;
+}
+
+/* 聚焦时的轻弹跳效果（不会引起 reflow） */
+.search-bar:focus-within {
+    transform: scale(1.015);   /* 只缩放，不位移，不卡顿 */
+    box-shadow: 0 16px 32px rgba(76,142,247,0.25);
+}
+
+/* 输入框光标进入时的亮度提升 */
+#search-input:focus {
+    background: rgba(255,255,255,0.92);
+    transition: background 0.3s ease;
+}
+
+/* 搜索按钮按下 */
+.search-btn:active {
+    transform: scale(0.92);
+    transition: transform 0.12s ease-out;
+}
+
+
+.post-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.post-cover {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+
+    border-radius: 12px;
+    border: 3px solid #000;
+    background: #fff;
+
+    flex-shrink: 0;
+}
+
+/* 无图片时的漫画占位 */
+.post-cover.placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 900;
+    color: #333;
+    background: #fafafa;
+}
+
+.empty-box {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.empty-bubble {
+    display: inline-block;
+    padding: 20px 26px;
+
+    border: 4px solid #000;
+    border-radius: 18px;
+    background: #fff;
+
+    box-shadow: -6px 6px 0 #000;
+    position: relative;
+
+    animation: pop 0.45s cubic-bezier(.33,1.4,.52,1.1);
+}
+
+@keyframes pop {
+    0% { transform: scale(0.6); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.empty-img {
+    width: 160px;
+    opacity: 0.9;
+}
+
+.empty-text {
+    margin-top: 8px;
+    font-size: 18px;
+    font-weight: 900;
+    color: #333;
+}
+
+/* 拟声词 */
+.empty-sfx {
+    position: absolute;
+    top: -28px;
+    right: -26px;
+
+    font-size: 26px;
+    font-weight: 900;
+    color: #ffd94c;
+    text-shadow: -3px 3px #000;
+
+    transform: rotate(8deg);
+    animation: shake 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes shake {
+    from { transform: rotate(6deg) translateY(0); }
+    to   { transform: rotate(10deg) translateY(-4px); }
 }

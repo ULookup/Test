@@ -1,49 +1,69 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <title>搜索 - IceACG 社区</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>搜索 - IceACG</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="icon" href="/static/logo.png">
-    <link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/navbar.css">
+<link rel="stylesheet" href="/css/search.css">
+<link rel="icon" href="/static/logo.png">
+
+<script type="module" src="/js/core/navbar.js"></script>
+<script type="module" src="/js/search.js"></script>
+
 </head>
 
-<body>
+<body data-disable-nav-search="true">
 
-<!-- 顶部导航栏 -->
+<!-- 顶部导航 -->
 <header class="navbar">
     <div class="nav-container">
         <a class="nav-left" href="/index.html">
-            <img src="/static/logo.png" class="logo">
-            <span class="site-title">IceACG 社区</span>
+            <img id="nav-logo" class="nav-logo" src="">
+            <span class="nav-title">IceACG</span>
         </a>
 
-        <div class="search-box">
-            <input id="search-input" placeholder="搜索帖子 / 用户">
-            <button id="search-btn">🔍</button>
+        <div class="nav-search">
+            <input id="nav-search-input" placeholder="搜索帖子 / 用户">
+            <button id="nav-search-btn" class="nav-search-btn">🔍</button>
         </div>
 
-        <div id="nav-right"></div>
+        <div id="nav-right" class="nav-right"></div>
     </div>
 </header>
 
-<!-- 主体布局 -->
+
+<!-- 搜索页顶部 Banner -->
+<section class="search-banner">
+    <div class="banner-inner">
+        <h1 class="banner-title">全站搜索</h1>
+        <p class="banner-sub">查找帖子、用户、内容…</p>
+    </div>
+</section>
+
 <main class="main">
 
-    <div class="left">
-        <h2 class="sec-title">帖子</h2>
-        <div id="post-results" class="post-list"></div>
+    <!-- 顶部搜索栏 -->
+    <div class="search-bar">
+        <input id="search-input" placeholder="搜索帖子 / 用户">
+        <button id="search-btn" class="search-btn">
+            <span class="icon">🔍</span>
+        </button>
     </div>
 
-    <aside class="right">
-        <h2 class="sec-title">用户</h2>
-        <div id="user-results" class="user-list"></div>
-    </aside>
+    <!-- Tabs -->
+    <div class="tabs">
+        <div class="tab active" data-type="posts">帖子</div>
+        <div class="tab" data-type="users">用户</div>
+    </div>
+
+    <!-- 结果列表 -->
+    <div id="result-box" class="result-box"></div>
+
+    <div id="load-more" class="load-more">加载中...</div>
 
 </main>
-
-<script type="module" src="/js/search.js"></script>
 
 </body>
 </html>

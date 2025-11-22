@@ -1,30 +1,47 @@
-document.getElementById("login-btn").onclick = async () => {
+import { Api } from "./core/api.js";
+import { State } from "./core/state.js";
 
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
+const btn = document.getElementById("login-btn");
+const errMsg = document.getElementById("error-msg");
 
-    if (!username || !password) {
-        alert("请输入用户名和密码");
+btn.onclick = async () => {
+
+    const account = document.getElementById("account").value.trim();
+    const password = document.getElementById("password").value;
+
+    if (!account || !password) {
+        showError("请输入完整信息");
         return;
     }
 
-    const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ username, password })
+    const res = await Api.post("/user/login", {
+        account,
+        password
     });
 
-    const json = await res.json();
+    // 登录失败
+    if (res.code !== 0) {
+        let msg = "未知错误";
 
-    if (json.code !== 0) {
-        alert(json.msg || "登录失败");
+        if (res.code === 2001) msg = "用户不存在";
+        if (res.code === 2002) msg = "密码错误";
+        if (res.msg) msg = res.msg;
+
+        showError(msg);
         return;
     }
 
-    // 保存 token & user_id
-    localStorage.setItem("token", json.data.token);
-    localStorage.setItem("user_id", json.data.user.id);
+    // 登录成功
+    const token = res.data.token;
+    const uid = res.data.user.id;
 
-    alert("登录成功！");
+    State.saveLogin(token, uid);
+
+    // 返回首页
     location.href = "/index.html";
 };
+
+function showError(msg) {
+    errMsg.innerText = msg;
+    errMsg.style.display = "block";
+}

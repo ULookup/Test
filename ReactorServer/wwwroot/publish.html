@@ -1,61 +1,92 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <title>发布帖子 - IceACG 社区</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>发布帖子 - IceACG</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="icon" href="/static/logo.png">
-  <link rel="stylesheet" href="/css/publish.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/publish.css">
+    <link rel="icon" href="/static/logo.png">
+    <script type="module" src="/js/core/navbar.js"></script>
+
 </head>
 
 <body>
 
+<!-- 导航栏 -->
 <header class="navbar">
     <div class="nav-container">
-
         <a class="nav-left" href="/index.html">
-            <img src="/static/logo.png" class="logo">
-            <span class="site-title">IceACG 社区</span>
+            <img src="/static/logo.png" class="nav-logo">
+            <span class="nav-title">IceACG</span>
         </a>
 
-        <div id="nav-right"></div>
+        <div class="nav-search">
+            <input id="nav-search-input" placeholder="搜索帖子 / 用户">
+            <button id="nav-search-btn" class="nav-search-btn">🔍</button>
+        </div>
 
+        <div id="nav-right" class="nav-right"></div>
     </div>
 </header>
 
+
+<!-- 顶部渐变 Banner，强化仪式感 -->
+<section class="publish-banner">
+    <div class="banner-text">
+        <h1>发布新帖子</h1>
+        <p>分享你的作品、想法与灵感</p>
+    </div>
+</section>
+
+
 <main class="main">
 
-  <div class="post-card">
+    <!-- 玻璃拟态编辑器主卡片 -->
+    <section class="card glass-card">
 
-      <h2 class="title">发布新帖</h2>
+        <!-- 标题 -->
+        <div class="form-item">
+            <label>标题</label>
+            <input id="title" placeholder="为你的帖子起一个好名字吧">
+        </div>
 
-      <!-- 标题 -->
-      <input id="post-title" class="input-title" placeholder="请输入标题（必填）">
+        <!-- 内容 -->
+        <div class="form-item">
+            <label>正文内容</label>
+            <textarea id="content" rows="6" placeholder="写点什么吧~ 你可以描述你的想法、分享图片、有趣故事等等"></textarea>
+        </div>
 
-      <!-- 内容 -->
-      <textarea id="post-content" class="input-content" placeholder="请输入正文内容"></textarea>
+        <!-- 标签 -->
+        <div class="form-item">
+            <label>标签（英文逗号分隔）</label>
+            <input id="tags" placeholder="例如：anime, 二次元, cosplay">
+        </div>
 
-      <!-- 标签 -->
-      <div class="tags-box">
-        <input id="tag-input" class="tag-input" placeholder="输入标签并回车添加">
-        <div id="tag-list" class="tag-list"></div>
-      </div>
+        <!-- 上传图片 -->
+        <div class="form-item">
+            <label>上传图片（最多 6 张）</label>
 
-      <!-- 图片上传 -->
-      <h3 class="sec-title">上传图片</h3>
-      <div class="img-box" id="img-box"></div>
-      <input type="file" id="img-input" accept="image/*" multiple style="display:none;">
-      <button id="add-img-btn" class="btn-blue">选择图片</button>
+            <div class="img-upload-box">
 
-      <!-- 提交按钮 -->
-      <button id="submit-btn" class="btn-primary">发布帖子</button>
+                <!-- 预览图容器 -->
+                <div id="img-list" class="img-list"></div>
 
-  </div>
+                <!-- 添加按钮 -->
+                <div id="add-img-btn" class="add-img">+</div>
+
+                <!-- 隐藏文件选择器 -->
+                <input id="img-file" type="file" accept="image/*" style="display:none;">
+            </div>
+        </div>
+
+        <button id="publish-btn" class="btn-primary">发布帖子</button>
+
+    </section>
 
 </main>
 
 <script type="module" src="/js/publish.js"></script>
-
 </body>
 </html>
