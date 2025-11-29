@@ -6,15 +6,29 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <mutex>
+#include <sys/mman.h>
 
 static const size_t MAX_BYTES = 256*1024;
 static const size_t NFREE_LISTS = 208;
+static const size_t NPAGES = 129;
+static const size_t PAGE_SHIFT = 13;
 
 #ifdef __x86_64__
     typedef unsigned long long PAGE_ID;
 #elif __i386__
     typedef size_t PAGE_ID;
 #endif
+
+inline static void *SystemAlloc(size_t kpage) {
+#ifdef __WIN32
+    void* ptr = VirtualAlloc(0, kpage << 13, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+#else
+    void *ptr = mmap(NULL, kpage << 13, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+#endif
+    if(ptr == nullptr) throw std::bad_alloc();
+
+    return ptr;
+}
 
 static void* &NextObj(void *obj) {
     return *(void**)obj;
@@ -31,6 +45,11 @@ public:
         _freelist = obj;
     }
 
+    void PushRange(void *start, void *end) {
+        NextObj(end) = _freelist;
+        _freelist = start;
+    }
+
     void *Pop() {
         assert(_freelist);
         //头删
@@ -40,11 +59,12 @@ public:
         return obj;
     }
 
-    bool Empty() {
-        return _freelist == nullptr;
-    }
+    bool Empty() { return _freelist == nullptr; }
+
+    size_t& MaxSize() { return _maxsize; }
 private:
     void *_freelist = nullptr;
+    size_t _maxsize = 1;
 };
 
 // 计算对象大小的对齐映射规则
@@ -115,6 +135,30 @@ public:
         }
         return -1;
     }
+
+    /* brief: 一次threadcache从中心缓存获取多少个对象 */
+    static size_t NumMoveSize(size_t size) {
+        assert(size > 0);
+        // [2, 512] 一次批量移动多少个对象的（慢启动）上限值
+        // 小对象一次批量上限高
+        // 大对象一次批量上限低
+        int num = MAX_BYTES / size;
+        if(num < 2) num = 2;
+        if(num > 512) num = 512;
+
+        return num;
+    }
+
+    /* brief: 一次centralcache从pagecache获取多少个span */
+    static size_t NumMovePage(size_t size) {
+        size_t num = NumMoveSize(size);
+        size_t npage = num * size;
+
+        npage >>= PAGE_SHIFT; //右移 13 位 即 除 8 * 1024
+        if(npage == 0) npage = 1;
+
+        return npage;
+    }
 };
 
 /* brief: 管理多个连续页大块内存跨度结构 */
@@ -140,6 +184,13 @@ public:
         _head->_prev = _head;
     }
 
+    Span *Begin() { return _head->_next; }
+    Span *End() { return _head; }
+
+    bool Empty() {
+        return _head->_next == _head;
+    }
+
     void Insert(Span *pos, Span *newSpan) {
         assert(pos);
         assert(newSpan);
@@ -152,6 +203,15 @@ public:
         pos->_prev = newSpan;
     }
 
+    void PushFront(Span *span) {
+        Insert(Begin(), span);
+    }
+
+    Span *PopFront() {
+        Span *front = _head->_next;
+        Erase(front);
+        return front;
+    }
     void Erase(Span *pos) {
         assert(pos);
         assert(pos != _head);
@@ -164,5 +224,6 @@ public:
     }
 private:
     Span *_head;
-    std::mutex _lock; //桶锁
+public:
+    std::mutex _mtx; //桶锁
 };
