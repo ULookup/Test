@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 #include <cassert>
 #include <pthread.h>
 #include <unistd.h>
@@ -11,7 +12,7 @@
 static const size_t MAX_BYTES = 256*1024;
 static const size_t NFREE_LISTS = 208;
 static const size_t NPAGES = 129;
-static const size_t PAGE_SHIFT = 13;
+static const size_t PAGE_SHIFT = 12;
 
 #ifdef __x86_64__
     typedef unsigned long long PAGE_ID;
@@ -30,6 +31,14 @@ inline static void *SystemAlloc(size_t kpage) {
     return ptr;
 }
 
+inline static void SystemFree(void *ptr, size_t length) {
+#ifdef _WIN32
+	VirtualFree(ptr, 0, MEM_RELEASE);
+#else
+	munmap(ptr, length);
+#endif
+}
+
 static void* &NextObj(void *obj) {
     return *(void**)obj;
 }
@@ -38,16 +47,18 @@ static void* &NextObj(void *obj) {
 class FreeList
 {
 public:
-    void *Push(void * obj) {
+    void Push(void * obj) {
         //头插
         //*(void**)obj = _freelist; 
         NextObj(obj) = _freelist;
         _freelist = obj;
+        _size++;
     }
 
-    void PushRange(void *start, void *end) {
+    void PushRange(void *start, void *end, size_t n) {
         NextObj(end) = _freelist;
         _freelist = start;
+        _size += n;
     }
 
     void *Pop() {
@@ -55,16 +66,35 @@ public:
         //头删
         void *obj = _freelist;
         _freelist = NextObj(obj);
+        _size--;
 
         return obj;
     }
 
+    void PopRange(void *&start, void *&end, size_t n) {
+        assert(n <= _size);
+        start = _freelist;
+        end = start;
+        for(size_t i = 0; i < n - 1; ++i) {
+            end = NextObj(end);
+        }
+
+        _freelist = NextObj(end);
+        NextObj(end) = nullptr;
+        _size -= n;
+    }
+
+    size_t Size() { return _size; }
+
     bool Empty() { return _freelist == nullptr; }
+
+
 
     size_t& MaxSize() { return _maxsize; }
 private:
     void *_freelist = nullptr;
     size_t _maxsize = 1;
+    size_t _size = 0;
 };
 
 // 计算对象大小的对齐映射规则
@@ -103,6 +133,7 @@ public:
         } else if(bytes <= 256*1024) {
             return _RoundUp(bytes, 8*1024);
         } else {
+            return _RoundUp(bytes, 1 << PAGE_SHIFT);
             assert(false);
         }
         return -1;
@@ -170,8 +201,11 @@ struct Span
     Span *_next = nullptr;    //双向链表的结构
     Span *_prev = nullptr;
 
+    size_t _obj_size = 0; // 切好的小对象的大小
     size_t _use_count = 0; // 切好小块内存，被分配给threadcache的计数
     void *_freelist = nullptr;   // 切好的小块内存的自由链表
+
+    bool _isUse = false; //是否在被使用
 };
 
 /* brief: 带头双向循环链表 */
@@ -215,6 +249,9 @@ public:
     void Erase(Span *pos) {
         assert(pos);
         assert(pos != _head);
+        if(pos != _head) {
+
+        }
 
         Span *prev = pos->_prev;
         Span *next = pos->_next;
